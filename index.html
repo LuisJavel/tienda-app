@@ -712,10 +712,19 @@ let cameraStarted = false;
 document.getElementById("startCameraBtn").onclick = async () => {
   if (cameraStarted) return;
   
-  document.getElementById("startCameraBtn").style.display = "none";
-  document.getElementById("reader").style.display = "block";
-  cameraStarted = true;
-  await startScanner();
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: "environment" } 
+    });
+    stream.getTracks().forEach(track => track.stop());
+    
+    document.getElementById("startCameraBtn").style.display = "none";
+    document.getElementById("reader").style.display = "block";
+    cameraStarted = true;
+    await startScanner();
+  } catch (err) {
+    status.innerHTML = "❌ Activa la cámara en ajustes del navegador";
+  }
 };
 
 async function startScanner() {
