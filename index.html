@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>StockFlow Mobile</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -17,71 +17,77 @@
   </audio>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
-    #reader video{width:100% !important;height:280px !important;object-fit:cover !important;border-radius:20px;}
-    body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#0f172a,#1e3a8a,#2563eb);min-height:100vh;color:white;padding:15px;}
+    body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#0f172a,#1e3a8a,#2563eb);min-height:100vh;color:white;padding:15px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
     .container{width:100%;max-width:500px;margin:auto;}
-    .header{text-align:center;margin-bottom:20px;}
-    .logo{width:90px;height:90px;border-radius:25px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;margin:auto;font-size:2.5rem;box-shadow:0 15px 30px rgba(0,0,0,.35);}
-    .header h1{margin-top:15px;font-size:2.3rem;font-weight:700;}
-    .header p{opacity:.8;margin-top:5px;font-size:.95rem;}
-    .resumen-card{background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:20px;padding:18px;margin-bottom:15px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.3);}
-    .resumen-card h3{font-size:1rem;opacity:.9;margin-bottom:8px;}
-    .resumen-total{font-size:2.2rem;font-weight:700;}
-    .resumen-items{font-size:1.1rem;margin-top:5px;opacity:.9;}
-    .resumen-fecha{font-size:.85rem;opacity:.7;margin-top:8px;}
-    .btn-limpiar{background:rgba(255,255,255,.2);border:none;border-radius:10px;padding:8px 16px;color:white;font-weight:600;cursor:pointer;margin-top:10px;}
-    .btn-limpiar:hover{background:rgba(255,255,255,.3);}
-    .mode-selector{display:flex;flex-direction:column;gap:14px;margin-top:25px;}
-    .mode-btn{border:none;border-radius:18px;padding:18px;font-size:1rem;font-weight:700;color:white;cursor:pointer;transition:.3s;box-shadow:0 10px 25px rgba(0,0,0,.25);}
-    .mode-btn:active{transform:scale(.96);}
+    .header{text-align:center;margin-bottom:15px;}
+    .logo{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;margin:auto;font-size:2rem;box-shadow:0 10px 25px rgba(0,0,0,.3);}
+    .header h1{margin-top:10px;font-size:2rem;font-weight:700;}
+    .header p{opacity:.7;font-size:.9rem;}
+    .resumen-card{background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:18px;padding:15px;margin-bottom:12px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.25);}
+    .resumen-card h3{font-size:.9rem;opacity:.9;margin-bottom:5px;}
+    .resumen-total{font-size:2rem;font-weight:700;}
+    .resumen-items{font-size:1rem;margin-top:3px;opacity:.9;}
+    .btn-limpiar{background:rgba(255,255,255,.2);border:none;border-radius:8px;padding:6px 14px;color:white;font-weight:600;cursor:pointer;margin-top:8px;}
+    .btn-limpiar:active{background:rgba(255,255,255,.35);}
+    .mode-selector{display:flex;flex-direction:column;gap:10px;margin-top:18px;}
+    .mode-btn{border:none;border-radius:16px;padding:15px;font-size:.95rem;font-weight:700;color:white;cursor:pointer;transition:.2s;box-shadow:0 6px 18px rgba(0,0,0,.2);}
+    .mode-btn:active{transform:scale(.97);}
     .venta-btn{background:linear-gradient(135deg,#ef4444,#dc2626);}
     .carrito-btn{background:linear-gradient(135deg,#06b6d4,#0891b2);}
     .recarga-btn{background:linear-gradient(135deg,#22c55e,#16a34a);}
     .agregar-btn{background:linear-gradient(135deg,#f59e0b,#d97706);}
     .consulta-btn{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
-    .active{outline:4px solid rgba(255,255,255,.25);}
-    .scanner-card{margin-top:22px;background:rgba(255,255,255,.12);backdrop-filter:blur(15px);border-radius:28px;padding:18px;border:1px solid rgba(255,255,255,.12);box-shadow:0 15px 35px rgba(0,0,0,.25);}
-    .scanner-title{text-align:center;margin-bottom:15px;font-size:1.2rem;font-weight:700;}
-    #reader{width:100%;height:280px;object-fit:cover;border-radius:20px;background:#000;}
-    .status{margin-top:18px;text-align:center;font-size:1rem;font-weight:600;}
-    .result{margin-top:18px;background:rgba(255,255,255,.10);border-radius:22px;padding:20px;min-height:100px;text-align:center;font-size:1.05rem;backdrop-filter:blur(10px);line-height:1.6;}
-    .precio-box{font-size:3rem;font-weight:700;margin-top:10px;color:#22c55e;}
-    .form-producto{margin-top:20px;background:white;border-radius:25px;padding:22px;color:#111827;display:none;}
-    .form-producto h3{text-align:center;margin-bottom:18px;color:#1e3a8a;}
-    .codigo-box{background:#f3f4f6;padding:14px;border-radius:14px;text-align:center;font-weight:700;margin-bottom:18px;}
-    .form-group{margin-bottom:16px;}
-    .form-group label{display:block;margin-bottom:7px;font-weight:600;}
-    .form-group input{width:100%;padding:14px;border-radius:14px;border:2px solid #d1d5db;font-size:1rem;}
+    .active{outline:3px solid rgba(255,255,255,.35);}
+    .scanner-card{margin-top:18px;background:rgba(255,255,255,.1);backdrop-filter:blur(12px);border-radius:24px;padding:15px;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 30px rgba(0,0,0,.2);}
+    .scanner-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+    .scanner-title{font-size:1.1rem;font-weight:700;}
+    .btn-stop-camera{background:#ef4444;color:white;border:none;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:.85rem;}
+    .btn-stop-camera:active{background:#dc2626;}
+    #startCameraBtn{width:100%;padding:35px 20px;border-radius:18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;font-size:1.1rem;font-weight:700;cursor:pointer;text-align:center;border:none;}
+    #reader{width:100%;height:250px;border-radius:18px;background:#000;display:none;}
+    #reader video{width:100%!important;height:250px!important;object-fit:cover!important;border-radius:18px;}
+    .status{margin-top:12px;text-align:center;font-size:.95rem;font-weight:600;}
+    .result{margin-top:15px;background:rgba(255,255,255,.1);border-radius:20px;padding:18px;text-align:center;font-size:1rem;backdrop-filter:blur(10px);min-height:80px;line-height:1.5;}
+    .precio-box{font-size:2.5rem;font-weight:700;margin-top:8px;color:#22c55e;}
+    .form-producto{margin-top:15px;background:white;border-radius:22px;padding:18px;color:#111827;display:none;}
+    .form-producto h3{text-align:center;margin-bottom:12px;color:#1e3a8a;}
+    .codigo-box{background:#f3f4f6;padding:12px;border-radius:12px;text-align:center;font-weight:700;margin-bottom:12px;}
+    .form-group{margin-bottom:12px;}
+    .form-group label{display:block;margin-bottom:5px;font-weight:600;font-size:.95rem;}
+    .form-group input{width:100%;padding:12px;border-radius:12px;border:2px solid #d1d5db;font-size:1rem;}
     .form-group input:focus{outline:none;border-color:#2563eb;}
-    .save-btn{width:100%;padding:16px;border:none;border-radius:16px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;font-size:1rem;font-weight:700;cursor:pointer;}
-    .log{margin-top:20px;background:rgba(255,255,255,.10);border-radius:25px;padding:20px;backdrop-filter:blur(10px);}
-    .log h3{margin-bottom:15px;}
-    .log-item{background:rgba(255,255,255,.08);border-radius:15px;padding:12px;margin-bottom:10px;line-height:1.5;}
-    .log-item small{display:block;opacity:.7;margin-bottom:4px;}
+    .save-btn{width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;font-size:1rem;font-weight:700;cursor:pointer;}
+    .log{margin-top:15px;background:rgba(255,255,255,.1);border-radius:22px;padding:15px;backdrop-filter:blur(10px);}
+    .log h3{margin-bottom:10px;font-size:1rem;}
+    .log-item{background:rgba(255,255,255,.07);border-radius:12px;padding:10px;margin-bottom:8px;font-size:.9rem;}
+    .log-item small{display:block;opacity:.65;margin-bottom:3px;}
+    .historial-section{margin-top:18px;background:rgba(255,255,255,.1);border-radius:22px;padding:18px;backdrop-filter:blur(10px);}
+    .historial-section h3{margin-bottom:12px;text-align:center;font-size:1.1rem;}
+    .historial-item{background:rgba(255,255,255,.07);border-radius:12px;padding:10px;margin-bottom:8px;}
+    .historial-item .fecha{font-size:.8rem;opacity:.65;}
+    .historial-item .producto{font-weight:600;margin-top:3px;}
+    .historial-item .detalle{display:flex;justify-content:space-between;margin-top:5px;font-size:.9rem;}
+    .historial-item .total-venta{color:#22c55e;font-weight:700;}
     .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center;z-index:1000;}
     .modal.active{display:flex;}
-    .modal-content{background:white;color:#111827;border-radius:25px;padding:25px;width:90%;max-width:350px;text-align:center;}
-    .modal-content h3{margin-bottom:15px;color:#1e3a8a;}
-    .modal-content input{width:100%;padding:14px;border-radius:14px;border:2px solid #d1d5db;font-size:1.2rem;text-align:center;margin-bottom:15px;}
+    .modal-content{background:white;color:#111827;border-radius:22px;padding:22px;width:90%;max-width:340px;text-align:center;}
+    .modal-content h3{margin-bottom:12px;color:#1e3a8a;font-size:1.2rem;}
+    .modal-content input{width:100%;padding:14px;border-radius:12px;border:2px solid #d1d5db;font-size:1.3rem;text-align:center;margin-bottom:12px;}
+    .modal-info{margin-bottom:12px;color:#555;font-size:.95rem;}
     .modal-buttons{display:flex;gap:10px;}
     .modal-btn{flex:1;padding:12px;border:none;border-radius:12px;font-weight:700;font-size:1rem;cursor:pointer;}
     .modal-btn.confirm{background:#2563eb;color:white;}
     .modal-btn.cancelar{background:#ef4444;color:white;}
-    .carrito-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f3f4f6;border-radius:10px;margin-bottom:8px;}
-    .carrito-item-name{font-weight:600;text-align:left;flex:1;}
-    .carrito-item-cant{background:#2563eb;color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
-    .carrito-item-precio{font-weight:700;color:#22c55e;}
-    .carrito-item-remove{background:#ef4444;color:white;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:.8rem;}
-    .carrito-total{font-size:1.8rem;font-weight:700;color:#1e3a8a;margin:15px 0;padding:15px;background:#e0e7ff;border-radius:15px;}
-    .cobrar-btn{width:100%;padding:18px;border:none;border-radius:16px;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-size:1.3rem;font-weight:700;cursor:pointer;}
-    .vaciar-btn{background:#ef4444;color:white;border:none;border-radius:10px;padding:8px 16px;cursor:pointer;margin-top:10px;}
-    .historial-section{margin-top:20px;background:rgba(255,255,255,.12);border-radius:25px;padding:20px;backdrop-filter:blur(10px);}
-    .historial-section h3{margin-bottom:15px;text-align:center;}
-    .historial-item{background:rgba(255,255,255,.08);border-radius:15px;padding:12px;margin-bottom:8px;}
-    .historial-item .fecha{font-size:.8rem;opacity:.7;}
-    .historial-item .producto{font-weight:600;font-size:1rem;}
-    .historial-item .detalle{display:flex;justify-content:space-between;margin-top:5px;}
-    .historial-item .total-venta{color:#22c55e;font-weight:700;}
+    .carrito-resumen{text-align:left;margin-bottom:15px;max-height:200px;overflow-y:auto;}
+    .carrito-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f3f4f6;border-radius:10px;margin-bottom:6px;}
+    .carrito-item-name{font-weight:600;text-align:left;flex:1;font-size:.95rem;}
+    .carrito-item-cant{background:#2563eb;color:white;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
+    .carrito-item-precio{font-weight:700;color:#22c55e;font-size:.95rem;}
+    .carrito-item-remove{background:#ef4444;color:white;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:.75rem;}
+    .carrito-total{font-size:1.6rem;font-weight:700;color:#1e3a8a;margin:12px 0;padding:12px;background:#e0e7ff;border-radius:12px;}
+    .cobrar-btn{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-size:1.2rem;font-weight:700;cursor:pointer;}
+    .vaciar-btn{background:#ef4444;color:white;border:none;border-radius:10px;padding:8px 16px;cursor:pointer;margin-top:10px;font-size:.9rem;}
+    .carrito-vacio{text-align:center;padding:30px;color:#666;font-size:1.1rem;}
   </style>
 </head>
 <body>
@@ -96,7 +102,7 @@
     <h3>📊 Resumen del Día ($)</h3>
     <div class="resumen-total" id="totalVendido">$ 0.00</div>
     <div class="resumen-items" id="totalItems">0 ventas</div>
-    <div class="resumen-fecha" id="fechaDia"></div>
+    <div id="fechaDia" style="font-size:.85rem;opacity:.7;margin-top:5px;"></div>
     <button class="btn-limpiar" onclick="limpiarResumen()">🗑️ Limpiar</button>
   </div>
 
@@ -109,40 +115,43 @@
   </div>
 
   <div class="scanner-card">
-    <div id="modoActual" class="scanner-title">Modo: 🔴 VENTA</div>
-    <div id="startCameraBtn" style="width:100%;padding:40px 20px;border-radius:20px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;font-size:1.2rem;font-weight:700;cursor:pointer;text-align:center;border:none;">📷 Pulsa para activar cámara</div>
-    <div id="reader" autoplay playsinline muted style="width:100%;min-height:280px;border-radius:20px;background:black;display:none;"></div>
-    <div class="status"><span id="status">Apunta el código a la cámara...</span></div>
+    <div class="scanner-header">
+      <div id="modoActual" class="scanner-title">Modo: 🔴 VENTA</div>
+      <button id="btnStopCamera" class="btn-stop-camera" onclick="stopCamera()" style="display:none;">✕ Cerrar Cámara</button>
+    </div>
+    <div id="startCameraBtn" onclick="startCameraApp()">📷 Pulsa para activar cámara</div>
+    <div id="reader"></div>
+    <div class="status"><span id="status">Activa la cámara para escanear</span></div>
   </div>
 
-  <div class="result" id="result">Esperando escaneo...</div>
+  <div class="result" id="result">Escanea un producto...</div>
 
   <div class="form-producto" id="formProducto">
     <h3>➕ Nuevo Producto</h3>
     <div class="codigo-box">Código: <span id="codigoEscaneado"></span></div>
-    <div class="form-group"><label>Producto</label><input type="text" id="nombreProducto" placeholder="Ej: Coca Cola 3L"></div>
-    <div class="form-group"><label>Stock</label><input type="number" id="stockProducto" placeholder="Ej: 20"></div>
-    <div class="form-group"><label>Precio ($)</label><input type="number" id="precioProducto" placeholder="Ej: 2.50" step="0.01"></div>
-    <button class="save-btn" onclick="guardarProducto()">💾 Guardar</button>
+    <div class="form-group"><label>Producto</label><input type="text" id="nombreProducto" placeholder="Nombre del producto"></div>
+    <div class="form-group"><label>Stock inicial</label><input type="number" id="stockProducto" placeholder="Cantidad"></div>
+    <div class="form-group"><label>Precio ($)</label><input type="number" id="precioProducto" placeholder="0.00" step="0.01"></div>
+    <button class="save-btn" onclick="guardarProducto()">💾 Guardar Producto</button>
   </div>
 
   <div class="log">
-    <h3>📋 Historial Reciente</h3>
+    <h3>📋 Actividad Reciente</h3>
     <div id="log"></div>
   </div>
 
   <div class="historial-section" id="historialSection" style="display:none;">
-    <h3>📦 Lista de Ventas del Día</h3>
+    <h3>📦 Ventas del Día</h3>
     <div id="listaVentas"></div>
-    <button class="vaciar-btn" onclick="toggleHistorial()">Cerrar</button>
+    <button class="vaciar-btn" onclick="toggleHistorial()">✕ Cerrar</button>
   </div>
 </div>
 
 <div class="modal" id="modalCantidad">
   <div class="modal-content">
     <h3 id="modalTitulo">🔢 Cantidad</h3>
-    <input type="number" id="inputCantidad" value="1" min="1" placeholder="Cantidad">
-    <div id="modalInfoProducto" style="margin-bottom:15px;color:#666;"></div>
+    <input type="number" id="inputCantidad" value="1" min="1" placeholder="1">
+    <div class="modal-info" id="modalInfoProducto"></div>
     <div class="modal-buttons">
       <button class="modal-btn cancelar" onclick="cerrarModalCantidad()">✕ Cancelar</button>
       <button class="modal-btn confirm" onclick="confirmarAccion()">✓ Aceptar</button>
@@ -153,10 +162,10 @@
 <div class="modal" id="modalCobrar">
   <div class="modal-content">
     <h3>💵 Cobrar</h3>
-    <div id="resumenCarrito"></div>
+    <div class="carrito-resumen" id="resumenCarrito"></div>
     <div class="carrito-total" id="totalCarrito">$ 0.00</div>
     <div class="modal-buttons">
-      <button class="modal-btn cancelar" onclick="cerrarModalCobrar()">←Seguir comprando</button>
+      <button class="modal-btn cancelar" onclick="cerrarModalCobrar()">← Seguir</button>
       <button class="modal-btn confirm" onclick="procesarCobro()" style="background:#22c55e;">💵 Cobrar</button>
     </div>
   </div>
@@ -172,8 +181,10 @@ let productoTemporal = "";
 let ultimoCodigoEscaneado = "";
 let modalAccion = "venta";
 let carrito = [];
+let html5QrCode = null;
+let cameraActiva = false;
+
 const COOLDOWN_TIME = 1500;
-const TIPO_CAMBIO = 3.75;
 const URL_API = "https://script.google.com/macros/s/AKfycby2IgT3K_Wh8c2zlHL8ThrfLKJVilW7VHzV4tOZToD1h8oQoDyqPSNcH9jNQlTLk_TvFw/exec";
 
 const scanSound = document.getElementById("scanSound");
@@ -189,12 +200,9 @@ const result = document.getElementById("result");
 const logDiv = document.getElementById("log");
 const formProducto = document.getElementById("formProducto");
 const codigoEscaneado = document.getElementById("codigoEscaneado");
-const modalCantidad = document.getElementById("modalCantidad");
-const inputCantidad = document.getElementById("inputCantidad");
-const modalInfoProducto = document.getElementById("modalInfoProducto");
-const modalCobrar = document.getElementById("modalCobrar");
-const historialSection = document.getElementById("historialSection");
-const listaVentas = document.getElementById("listaVentas");
+const btnStopCamera = document.getElementById("btnStopCamera");
+const startCameraBtn = document.getElementById("startCameraBtn");
+const readerDiv = document.getElementById("reader");
 
 function initLocalStorage(){
   const hoy = new Date().toDateString();
@@ -230,19 +238,19 @@ function guardarVentaLocal(nombre, precio, cantidad){
 
 function actualizarResumen(){
   const data = JSON.parse(localStorage.getItem("stockflow_resumen") || "{}") || {};
-  document.getElementById("totalVendido").textContent = "$ " + ((data.total || 0)).toFixed(2);
+  document.getElementById("totalVendido").textContent = "$ " + (data.total || 0).toFixed(2);
   document.getElementById("totalItems").textContent = (data.cantidad || 0) + " ventas";
   const fecha = new Date();
   document.getElementById("fechaDia").textContent = fecha.toLocaleDateString("es-ES", {weekday:"long", day:"numeric", month:"long"});
 }
 
 function limpiarResumen(){
-  if(confirm("¿Limpiar resumen del día?")){
+  if(confirm("¿Limpiar resumen del día?\nEsto no afecta Google Sheets.")){
     const hoy = new Date().toDateString();
     localStorage.setItem("stockflow_resumen", JSON.stringify({fecha: hoy, total: 0, cantidad: 0, ventas: []}));
     carrito = [];
     actualizarResumen();
-    actualizarCarrito();
+    result.innerHTML = "Resumen limpiado ✓";
   }
 }
 
@@ -250,11 +258,12 @@ function mostrarHistorial(){
   const data = JSON.parse(localStorage.getItem("stockflow_resumen") || "{}") || {};
   const ventas = data.ventas || [];
   if(ventas.length === 0){
-    listaVentas.innerHTML = "<p style='text-align:center;color:#666;padding:20px;'>No hay ventas hoy</p>";
+    listaVentas.innerHTML = "<div class='carrito-vacio'>No hay ventas hoy</div>";
   } else {
     listaVentas.innerHTML = ventas.map(v => `
       <div class="historial-item">
-        <div class="fecha">${v.hora} - ${v.nombre}</div>
+        <div class="fecha">${v.hora}</div>
+        <div class="producto">${v.nombre}</div>
         <div class="detalle">
           <span>x${v.cantidad} × $${v.precio.toFixed(2)}</span>
           <span class="total-venta">$${v.total.toFixed(2)}</span>
@@ -269,8 +278,15 @@ function toggleHistorial(){
   historialSection.style.display = "none";
 }
 
-function playScanSound(){scanSound.currentTime = 0; scanSound.play().catch(err => {});}
-function showErrorSound(){errorSound.currentTime = 0; errorSound.play().catch(()=>{});}
+function playScanSound(){
+  scanSound.currentTime = 0;
+  scanSound.play().catch(() => {});
+}
+
+function showErrorSound(){
+  errorSound.currentTime = 0;
+  errorSound.play().catch(() => {});
+}
 
 function resetButtons(){
   btnVenta.classList.remove("active");
@@ -280,48 +296,119 @@ function resetButtons(){
   btnConsulta.classList.remove("active");
 }
 
-btnVenta.onclick = () => {currentMode = "venta"; resetButtons(); btnVenta.classList.add("active"); modoActual.innerHTML = "Modo: 🔴 VENTA"; formProducto.style.display = "none"; historialSection.style.display = "none";};
-btnCarrito.onclick = () => {currentMode = "carrito"; resetButtons(); btnCarrito.classList.add("active"); modoActual.innerHTML = "🛒 CARRITO"; formProducto.style.display = "none"; historialSection.style.display = "none"; mostrarCarrito();};
-btnRecarga.onclick = () => {currentMode = "recarga"; resetButtons(); btnRecarga.classList.add("active"); modoActual.innerHTML = "🟢 RECARGAR STOCK"; formProducto.style.display = "none"; historialSection.style.display = "none";};
-btnAgregar.onclick = () => {currentMode = "agregar"; resetButtons(); btnAgregar.classList.add("active"); modoActual.innerHTML = "➕ AGREGAR PRODUCTO"; historialSection.style.display = "none";};
-btnConsulta.onclick = () => {currentMode = "consulta"; resetButtons(); btnConsulta.classList.add("active"); modoActual.innerHTML = "💲 CONSULTAR PRECIO"; formProducto.style.display = "none"; historialSection.style.display = "none";};
-
-let html5QrCode;
-let cameraStarted = false;
-
-document.getElementById("startCameraBtn").onclick = async () => {
-  if (cameraStarted) return;
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-    stream.getTracks().forEach(track => track.stop());
-    document.getElementById("startCameraBtn").style.display = "none";
-    document.getElementById("reader").style.display = "block";
-    cameraStarted = true;
-    await startScanner();
-  } catch (err) {
-    status.innerHTML = "❌ Activa la cámara en ajustes del navegador";
-  }
+btnVenta.onclick = () => {
+  currentMode = "venta";
+  resetButtons();
+  btnVenta.classList.add("active");
+  modoActual.innerHTML = "Modo: 🔴 VENTA";
+  formProducto.style.display = "none";
+  historialSection.style.display = "none";
 };
 
-async function startScanner() {
+btnCarrito.onclick = () => {
+  currentMode = "carrito";
+  resetButtons();
+  btnCarrito.classList.add("active");
+  modoActual.innerHTML = "🛒 CARRITO";
+  formProducto.style.display = "none";
+  historialSection.style.display = "none";
+  mostrarCarrito();
+};
+
+btnRecarga.onclick = () => {
+  currentMode = "recarga";
+  resetButtons();
+  btnRecarga.classList.add("active");
+  modoActual.innerHTML = "🟢 RECARGAR";
+  formProducto.style.display = "none";
+  historialSection.style.display = "none";
+};
+
+btnAgregar.onclick = () => {
+  currentMode = "agregar";
+  resetButtons();
+  btnAgregar.classList.add("active");
+  modoActual.innerHTML = "➕ AGREGAR";
+  historialSection.style.display = "none";
+};
+
+btnConsulta.onclick = () => {
+  currentMode = "consulta";
+  resetButtons();
+  btnConsulta.classList.add("active");
+  modoActual.innerHTML = "💲 CONSULTAR";
+  formProducto.style.display = "none";
+  historialSection.style.display = "none";
+};
+
+async function startCameraApp(){
+  if(cameraActiva) return;
+  
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: "environment" } 
+    });
+    stream.getTracks().forEach(track => track.stop());
+    
+    startCameraBtn.style.display = "none";
+    readerDiv.style.display = "block";
+    btnStopCamera.style.display = "block";
+    cameraActiva = true;
+    
+    await iniciarEscaner();
+  } catch(err){
+    status.innerHTML = "❌ No se pudo acceder a la cámara";
+    console.error(err);
+  }
+}
+
+async function iniciarEscaner(){
   try {
     html5QrCode = new Html5Qrcode("reader");
     await html5QrCode.start(
       { facingMode: "environment" },
-      { fps: 15, qrbox: { width: 350, height: 350 }, aspectRatio: 1.0 },
-      function(decodedText){ console.log("ESCANEADO:", decodedText); handleScan(decodedText); },
-      function(errorMessage){}
+      {
+        fps: 12,
+        qrbox: { width: 300, height: 300 },
+        aspectRatio: 1.0
+      },
+      function(decodedText){
+        console.log("ESCANEADO:", decodedText);
+        handleScan(decodedText);
+      },
+      function(errorMessage){
+        // Silencioso
+      }
     );
     status.innerHTML = "📷 Cámara activa";
-  } catch(err) {
+  } catch(err){
+    status.innerHTML = "❌ Error al iniciar cámara";
     console.error(err);
-    status.innerHTML = "❌ Error: " + err;
   }
 }
 
+async function stopCamera(){
+  if(html5QrCode){
+    try {
+      await html5QrCode.stop();
+      html5QrCode = null;
+    } catch(e){
+      console.log("Cámara ya detenida");
+    }
+  }
+  cameraActiva = false;
+  readerDiv.style.display = "none";
+  btnStopCamera.style.display = "none";
+  startCameraBtn.style.display = "block";
+  status.innerHTML = "Cámara cerrada";
+}
+
 function handleScan(codigo){
+  if(isScanning) return;
+  
   const now = Date.now();
-  if(isScanning || (now - lastScanTime) < COOLDOWN_TIME){ return; }
+  if((now - lastScanTime) < COOLDOWN_TIME) return;
+  
   isScanning = true;
   lastScanTime = now;
   playScanSound();
@@ -331,20 +418,31 @@ function handleScan(codigo){
   if(currentMode === "consulta"){
     result.innerHTML = "Consultando...";
     $.ajax({
-      url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+      url: URL_API,
+      method: "POST",
+      contentType: "text/plain; charset=utf-8",
       data: JSON.stringify({op: "consultaprecio", codigo: codigo}),
       success: function(res){
-        if(!res.success){ result.innerHTML = `${res.message}`; showErrorSound(); return; }
+        if(!res.success){
+          result.innerHTML = "❌ " + res.message;
+          showErrorSound();
+          return;
+        }
         const stock = res.stock ?? 0;
         result.innerHTML = `
-          <h2>${res.producto}</h2>
+          <strong>${res.producto}</strong>
           <div class="precio-box">$ ${res.precio}</div>
-          <div style="margin-top:10px;font-size:1.3rem;font-weight:700;color:${stock == 0 ? 'red' : 'lime'}">📦 Stock: ${stock}</div>
-          ${stock == 0 ? `<div style="color:red;font-weight:700;margin-top:10px;">🚨 SIN STOCK</div>` : ""}`;
+          <div style="margin-top:8px;font-size:1.1rem;color:${stock == 0 ? 'red' : '#22c55e'}">
+            📦 Stock: ${stock}
+          </div>
+          ${stock == 0 ? "<div style='color:red;font-weight:700;margin-top:8px;'>🚨 SIN STOCK</div>" : ""}
+        `;
         if(stock == 0) showErrorSound();
-        addToLog(`CONSULTA - ${codigo}`);
+        addToLog("CONSULTA: " + codigo);
       },
-      complete: function(){ setTimeout(() => { isScanning = false; }, 1000); }
+      complete: function(){
+        setTimeout(() => { isScanning = false; }, 1200);
+      }
     });
     return;
   }
@@ -353,21 +451,29 @@ function handleScan(codigo){
     codigoNuevoProducto = codigo;
     codigoEscaneado.innerHTML = codigo;
     formProducto.style.display = "block";
-    result.innerHTML = `✅ Código escaneado<br>Completa el formulario`;
-    setTimeout(() => { isScanning = false; }, 1000);
+    result.innerHTML = "✅ Código escaneado<br>Completa el formulario";
+    setTimeout(() => { isScanning = false; }, 1200);
     return;
   }
 
   if(currentMode === "recarga"){
     result.innerHTML = "Consultando producto...";
     $.ajax({
-      url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+      url: URL_API,
+      method: "POST",
+      contentType: "text/plain; charset=utf-8",
       data: JSON.stringify({op: "consultaprecio", codigo: codigo}),
       success: function(res){
-        if(!res.success){ result.innerHTML = `${res.message}`; showErrorSound(); isScanning = false; return; }
+        if(!res.success){
+          result.innerHTML = "❌ " + res.message;
+          showErrorSound();
+          isScanning = false;
+          return;
+        }
         productoTemporal = res.producto;
+        precioTemporal = parseFloat(res.precio) || 0;
         modalAccion = "recarga";
-        document.getElementById("modalTitulo").innerHTML = "🔢 Cantidad a recargar";
+        document.getElementById("modalTitulo").innerHTML = "🟢 Recargar Stock";
         modalInfoProducto.innerHTML = `<strong>${res.producto}</strong><br>Stock actual: ${res.stock}`;
         inputCantidad.value = 1;
         inputCantidad.min = 1;
@@ -375,7 +481,11 @@ function handleScan(codigo){
         modalCantidad.classList.add("active");
         isScanning = false;
       },
-      error: function(){ result.innerHTML = "❌ Producto no encontrado"; showErrorSound(); isScanning = false; }
+      error: function(){
+        result.innerHTML = "❌ Producto no encontrado";
+        showErrorSound();
+        isScanning = false;
+      }
     });
     return;
   }
@@ -383,19 +493,28 @@ function handleScan(codigo){
   if(currentMode === "venta" || currentMode === "carrito"){
     result.innerHTML = "Consultando...";
     $.ajax({
-      url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+      url: URL_API,
+      method: "POST",
+      contentType: "text/plain; charset=utf-8",
       data: JSON.stringify({op: "consultaprecio", codigo: codigo}),
       success: function(res){
-        if(!res.success){ result.innerHTML = `${res.message}`; showErrorSound(); isScanning = false; return; }
+        if(!res.success){
+          result.innerHTML = "❌ " + res.message;
+          showErrorSound();
+          isScanning = false;
+          return;
+        }
         precioTemporal = parseFloat(res.precio) || 0;
         productoTemporal = res.producto;
         const stock = res.stock ?? 0;
+        
         if(stock === 0){
           result.innerHTML = `❌ SIN STOCK<br><br>${res.producto}`;
           showErrorSound();
           isScanning = false;
           return;
         }
+        
         modalAccion = currentMode === "carrito" ? "agregarCarrito" : "venta";
         document.getElementById("modalTitulo").innerHTML = currentMode === "carrito" ? "🛒 Agregar al carrito" : "🔢 Cantidad a vender";
         modalInfoProducto.innerHTML = `<strong>${res.producto}</strong><br>Precio: $ ${res.precio}<br>Stock: ${stock}`;
@@ -405,7 +524,11 @@ function handleScan(codigo){
         modalCantidad.classList.add("active");
         isScanning = false;
       },
-      error: function(){ result.innerHTML = "❌ Producto no encontrado"; showErrorSound(); isScanning = false; }
+      error: function(){
+        result.innerHTML = "❌ Producto no encontrado";
+        showErrorSound();
+        isScanning = false;
+      }
     });
   }
 }
@@ -418,7 +541,10 @@ function cerrarModalCantidad(){
 
 function confirmarAccion(){
   const cantidad = parseInt(inputCantidad.value) || 1;
-  if(cantidad < 1){ alert("Cantidad inválida"); return; }
+  if(cantidad < 1){
+    alert("Cantidad inválida");
+    return;
+  }
   cerrarModalCantidad();
 
   if(modalAccion === "venta"){
@@ -431,15 +557,26 @@ function confirmarAccion(){
 }
 
 function procesarVenta(codigo, cantidad){
-  if(!codigo){ result.innerHTML = "❌ Escanea primero"; return; }
-  result.innerHTML = "Procesando venta...";
+  if(!codigo){
+    result.innerHTML = "❌ Escanea el código primero";
+    return;
+  }
+  result.innerHTML = "Procesando...";
   $.ajax({
-    url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+    url: URL_API,
+    method: "POST",
+    contentType: "text/plain; charset=utf-8",
     data: JSON.stringify({op: "registraventa", codigo: codigo, cantidad: cantidad}),
     success: function(res){
-      const stock = res.stock ?? 1;
-      const isError = !res.success || stock == 0;
-      result.innerHTML = `<strong style="color:${isError ? 'red' : 'lime'}">${res.success ? '✅ Vendido' : '❌ Error'}</strong><br><br>${res.message}${stock == 0 ? `<br><b style="color:red">🚨 SIN STOCK</b>` : ""}`;
+      const isError = !res.success;
+      const stock = res.stock ?? 0;
+      result.innerHTML = `
+        <strong style="color:${isError ? 'red' : '#22c55e'}">
+          ${res.success ? '✅ Vendido' : '❌ Error'}
+        </strong>
+        <br><br>${res.message}
+        ${stock == 0 ? "<br><b style='color:red'>🚨 SIN STOCK</b>" : ""}
+      `;
       if(!isError){
         guardarVentaLocal(productoTemporal, precioTemporal, cantidad);
         playScanSound();
@@ -448,24 +585,41 @@ function procesarVenta(codigo, cantidad){
       }
       addToLog(`VENTA x${cantidad} - ${productoTemporal}`);
     },
-    error: function(){ result.innerHTML = "❌ Error al registrar"; showErrorSound(); },
-    complete: function(){ setTimeout(() => { isScanning = false; }, 1000); }
+    error: function(){
+      result.innerHTML = "❌ Error de conexión";
+      showErrorSound();
+    },
+    complete: function(){
+      setTimeout(() => { isScanning = false; }, 1200);
+    }
   });
 }
 
 function procesarRecarga(codigo, cantidad){
   result.innerHTML = "Recargando...";
   $.ajax({
-    url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+    url: URL_API,
+    method: "POST",
+    contentType: "text/plain; charset=utf-8",
     data: JSON.stringify({op: "recargavarios", codigo: codigo, cantidad: cantidad}),
     success: function(res){
       const isError = !res.success;
-      result.innerHTML = `<strong style="color:${isError ? 'red' : 'lime'}">${res.success ? '✅ Recargado' : '❌ Error'}</strong><br><br>${res.message}`;
+      result.innerHTML = `
+        <strong style="color:${isError ? 'red' : '#22c55e'}">
+          ${res.success ? '✅ Recargado' : '❌ Error'}
+        </strong>
+        <br><br>${res.message}
+      `;
       if(isError) showErrorSound();
-      addToLog(`RECARGA x${cantidad} - ${productoTemporal}`);
+      addToLog(`RECARGA +${cantidad} - ${productoTemporal}`);
     },
-    error: function(){ result.innerHTML = "❌ Error al recargar"; showErrorSound(); },
-    complete: function(){ setTimeout(() => { isScanning = false; }, 1000); }
+    error: function(){
+      result.innerHTML = "❌ Error al recargar";
+      showErrorSound();
+    },
+    complete: function(){
+      setTimeout(() => { isScanning = false; }, 1200);
+    }
   });
 }
 
@@ -477,30 +631,30 @@ function agregarAlCarrito(nombre, precio, cantidad){
     carrito.push({nombre, precio, cantidad});
   }
   mostrarCarrito();
-  result.innerHTML = `✅ ${nombre} x${cantidad} agregado al carrito`;
+  result.innerHTML = `✅ ${nombre} x${cantidad}<br>agregado al carrito`;
   addToLog(`AGREGADO x${cantidad} - ${nombre}`);
 }
 
 function mostrarCarrito(){
   if(carrito.length === 0){
-    result.innerHTML = "🛒 Carrito vacío<br>Escanea productos para agregarlos";
+    result.innerHTML = "🛒 Carrito vacío<br>Escanea productos para agregar";
     return;
   }
   const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
   result.innerHTML = `
-    <h3>🛒 Tu Carrito</h3>
+    <h3 style="margin-bottom:12px;">🛒 Tu Carrito</h3>
     ${carrito.map((item, i) => `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#f3f4f6;border-radius:10px;margin-bottom:8px;color:#111;">
-        <span style="font-weight:600;">${item.nombre}</span>
-        <span style="background:#2563eb;color:white;padding:4px 12px;border-radius:20px;">x${item.cantidad}</span>
-        <span style="font-weight:700;color:#22c55e;">$${(item.precio * item.cantidad).toFixed(2)}</span>
-        <button onclick="quitarDelCarrito(${i})" style="background:#ef4444;color:white;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;">✕</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#f3f4f6;border-radius:10px;margin-bottom:6px;color:#111;">
+        <span style="font-weight:600;font-size:.9rem;">${item.nombre}</span>
+        <span style="background:#2563eb;color:white;padding:3px 10px;border-radius:15px;font-size:.85rem;">x${item.cantidad}</span>
+        <span style="font-weight:700;color:#22c55e;font-size:.9rem;">$${(item.precio * item.cantidad).toFixed(2)}</span>
+        <button onclick="quitarDelCarrito(${i})" style="background:#ef4444;color:white;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:.7rem;">✕</button>
       </div>
     `).join("")}
-    <div style="font-size:1.8rem;font-weight:700;color:#1e3a8a;margin-top:15px;padding:15px;background:#e0e7ff;border-radius:15px;">
+    <div style="font-size:1.5rem;font-weight:700;color:#1e3a8a;margin-top:12px;padding:12px;background:#e0e7ff;border-radius:12px;">
       Total: $${total.toFixed(2)}
     </div>
-    <button onclick="mostrarModalCobrar()" style="width:100%;padding:18px;margin-top:15px;border:none;border-radius:16px;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-size:1.3rem;font-weight:700;cursor:pointer;">
+    <button onclick="mostrarModalCobrar()" style="width:100%;padding:16px;margin-top:12px;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-size:1.2rem;font-weight:700;cursor:pointer;">
       💵 Cobrar $${total.toFixed(2)}
     </button>
   `;
@@ -515,7 +669,7 @@ function mostrarModalCobrar(){
   if(carrito.length === 0) return;
   const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
   document.getElementById("resumenCarrito").innerHTML = carrito.map(item => `
-    <div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #ddd;">
+    <div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #ddd;color:#111;font-size:.95rem;">
       <span>${item.nombre} x${item.cantidad}</span>
       <span style="font-weight:700;color:#22c55e;">$${(item.precio * item.cantidad).toFixed(2)}</span>
     </div>
@@ -529,50 +683,76 @@ function cerrarModalCobrar(){
 }
 
 function procesarCobro(){
+  if(carrito.length === 0) return;
+  
   const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-  let ventasPendientes = carrito.length;
+  
+  // Enviar cada producto al servidor
+  let pendientes = carrito.length;
   
   carrito.forEach(item => {
+    // Buscar código del producto (necesario para enviar a Google Sheets)
+    // Por ahora usamos el último código escaneado para cada item
     $.ajax({
-      url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
-      data: JSON.stringify({op: "registraventa", codigo: ultimoCodigoEscaneado || "", cantidad: item.cantidad}),
+      url: URL_API,
+      method: "POST",
+      contentType: "text/plain; charset=utf-8",
+      data: JSON.stringify({op: "registraventa", codigo: ultimoCodigoEscaneado, cantidad: item.cantidad}),
       success: function(res){
         guardarVentaLocal(item.nombre, item.precio, item.cantidad);
+        pendientes--;
+        if(pendientes === 0){
+          cerrarModalCobrar();
+          result.innerHTML = `✅ VENTA COMPLETADA<br><br><span style="font-size:2rem;font-weight:700;color:#22c55e;">$${total.toFixed(2)}</span><br><br>¡Gracias!`;
+          playScanSound();
+          carrito = [];
+          setTimeout(() => {
+            currentMode = "venta";
+            resetButtons();
+            btnVenta.classList.add("active");
+            modoActual.innerHTML = "Modo: 🔴 VENTA";
+            result.innerHTML = "Esperando escaneo...";
+          }, 2500);
+        }
       }
     });
   });
-
-  cerrarModalCobrar();
-  result.innerHTML = `✅ VENTA COMPLETADA<br><br><span style="font-size:2rem;font-weight:700;color:#22c55e;">$${total.toFixed(2)}</span><br><br>¡Gracias!`;
-  playScanSound();
-  carrito = [];
-  setTimeout(() => {
-    currentMode = "venta";
-    resetButtons();
-    btnVenta.classList.add("active");
-    modoActual.innerHTML = "Modo: 🔴 VENTA";
-    result.innerHTML = "Esperando escaneo...";
-  }, 2000);
 }
 
 function guardarProducto(){
   const producto = document.getElementById("nombreProducto").value.trim();
   const stock = document.getElementById("stockProducto").value.trim();
   const precio = document.getElementById("precioProducto").value.trim();
-  if(!producto || !stock || !precio){ alert("Completa todos los campos"); return; }
-  result.innerHTML = "Guardando producto...";
+  
+  if(!producto || !stock || !precio){
+    alert("Completa todos los campos");
+    return;
+  }
+  
+  result.innerHTML = "Guardando...";
   $.ajax({
-    url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
-    data: JSON.stringify({op: "agregarproducto", codigo: codigoNuevoProducto, producto: producto, stock: stock, precio: precio}),
+    url: URL_API,
+    method: "POST",
+    contentType: "text/plain; charset=utf-8",
+    data: JSON.stringify({
+      op: "agregarproducto",
+      codigo: codigoNuevoProducto,
+      producto: producto,
+      stock: stock,
+      precio: precio
+    }),
     success: function(res){
-      result.innerHTML = `<strong>${res.success ? '✅ Producto agregado' : '❌ Error'}</strong><br><br>${res.message}`;
+      result.innerHTML = `<strong style="color:${res.success ? '#22c55e' : 'red'}">${res.success ? '✅ Producto agregado' : '❌ Error'}</strong><br><br>${res.message}`;
       if(res.success){
         formProducto.style.display = "none";
         document.getElementById("nombreProducto").value = "";
         document.getElementById("stockProducto").value = "";
         document.getElementById("precioProducto").value = "";
       }
-      addToLog(`NUEVO - ${producto}`);
+      addToLog("NUEVO: " + producto);
+    },
+    error: function(){
+      result.innerHTML = "❌ Error al guardar";
     }
   });
 }
@@ -580,10 +760,13 @@ function guardarProducto(){
 function addToLog(texto){
   const hora = new Date().toLocaleTimeString();
   logDiv.innerHTML = `<div class="log-item"><small>${hora}</small>${texto}</div>` + logDiv.innerHTML;
-  if(logDiv.children.length > 15) logDiv.removeChild(logDiv.lastChild);
+  if(logDiv.children.length > 12) logDiv.removeChild(logDiv.lastChild);
 }
 
-window.onload = () => { initLocalStorage(); console.log("StockFlow listo"); };
+window.onload = () => {
+  initLocalStorage();
+  console.log("StockFlow listo ✓");
+};
 </script>
 </body>
 </html>
