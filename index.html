@@ -1,723 +1,223 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
   <meta charset="UTF-8" />
-
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0"/>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>StockFlow Mobile</title>
-
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-  <link rel="preconnect"
-        href="https://fonts.googleapis.com">
-
-  <link rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-  <!-- SONIDO -->
-<audio id="scanSound" preload="auto">
-  <source src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"
-          type="audio/mp3">
-</audio>
-<audio id="errorSound" preload="auto">
-  <source src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3" type="audio/mp3">
-</audio>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <audio id="scanSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3" type="audio/mp3">
+  </audio>
+  <audio id="errorSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3" type="audio/mp3">
+  </audio>
   <style>
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-#reader video{
-    width:100% !important;
-    height:320px !important;
-    object-fit:cover !important;
-    border-radius:20px;
-}
-    body{
-
-      font-family:'Poppins',sans-serif;
-
-      background:
-      linear-gradient(180deg,
-      #0f172a,
-      #1e3a8a,
-      #2563eb);
-
-      min-height:100vh;
-
-      color:white;
-
-      padding:15px;
-    }
-
-    .container{
-
-      width:100%;
-
-      max-width:500px;
-
-      margin:auto;
-    }
-
-    .header{
-
-      text-align:center;
-
-      margin-bottom:20px;
-    }
-
-    .logo{
-
-      width:90px;
-      height:90px;
-
-      border-radius:25px;
-
-      background:
-      linear-gradient(135deg,
-      #3b82f6,
-      #1d4ed8);
-
-      display:flex;
-
-      align-items:center;
-
-      justify-content:center;
-
-      margin:auto;
-
-      font-size:2.5rem;
-
-      box-shadow:
-      0 15px 30px rgba(0,0,0,.35);
-    }
-
-    .header h1{
-
-      margin-top:15px;
-
-      font-size:2.3rem;
-
-      font-weight:700;
-    }
-
-    .header p{
-
-      opacity:.8;
-
-      margin-top:5px;
-
-      font-size:.95rem;
-    }
-
-    .mode-selector{
-
-      display:flex;
-
-      flex-direction:column;
-
-      gap:14px;
-
-      margin-top:25px;
-    }
-
-    .mode-btn{
-
-      border:none;
-
-      border-radius:18px;
-
-      padding:18px;
-
-      font-size:1rem;
-
-      font-weight:700;
-
-      color:white;
-
-      cursor:pointer;
-
-      transition:.3s;
-
-      box-shadow:
-      0 10px 25px rgba(0,0,0,.25);
-    }
-
-    .mode-btn:active{
-      transform:scale(.96);
-    }
-
-    .venta-btn{
-      background:
-      linear-gradient(135deg,
-      #ef4444,
-      #dc2626);
-    }
-
-    .recarga-btn{
-      background:
-      linear-gradient(135deg,
-      #22c55e,
-      #16a34a);
-    }
-
-    .agregar-btn{
-      background:
-      linear-gradient(135deg,
-      #f59e0b,
-      #d97706);
-    }
-
-    .consulta-btn{
-      background:
-      linear-gradient(135deg,
-      #8b5cf6,
-      #6d28d9);
-    }
-
-    .active{
-
-      outline:
-      4px solid rgba(255,255,255,.25);
-    }
-
-    .scanner-card{
-
-      margin-top:22px;
-
-      background:
-      rgba(255,255,255,.12);
-
-      backdrop-filter:blur(15px);
-
-      border-radius:28px;
-
-      padding:18px;
-
-      border:
-      1px solid rgba(255,255,255,.12);
-
-      box-shadow:
-      0 15px 35px rgba(0,0,0,.25);
-    }
-
-    .scanner-title{
-
-      text-align:center;
-
-      margin-bottom:15px;
-
-      font-size:1.2rem;
-
-      font-weight:700;
-    }
-
-#reader{
-  width:100%;
-  height:320px;
-  object-fit:cover;
-  border-radius:20px;
-  background:#000;
-}
-
-    .status{
-
-      margin-top:18px;
-
-      text-align:center;
-
-      font-size:1rem;
-
-      font-weight:600;
-    }
-
-    .result{
-
-      margin-top:18px;
-
-      background:
-      rgba(255,255,255,.10);
-
-      border-radius:22px;
-
-      padding:20px;
-
-      min-height:100px;
-
-      text-align:center;
-
-      font-size:1.05rem;
-
-      backdrop-filter:blur(10px);
-
-      line-height:1.6;
-    }
-
-    .precio-box{
-
-      font-size:3rem;
-
-      font-weight:700;
-
-      margin-top:10px;
-
-      color:#22c55e;
-    }
-
-    .form-producto{
-
-      margin-top:20px;
-
-      background:white;
-
-      border-radius:25px;
-
-      padding:22px;
-
-      color:#111827;
-
-      display:none;
-    }
-
-    .form-producto h3{
-
-      text-align:center;
-
-      margin-bottom:18px;
-
-      color:#1e3a8a;
-    }
-
-    .codigo-box{
-
-      background:#f3f4f6;
-
-      padding:14px;
-
-      border-radius:14px;
-
-      text-align:center;
-
-      font-weight:700;
-
-      margin-bottom:18px;
-    }
-
-    .form-group{
-
-      margin-bottom:16px;
-    }
-
-    .form-group label{
-
-      display:block;
-
-      margin-bottom:7px;
-
-      font-weight:600;
-    }
-
-    .form-group input{
-
-      width:100%;
-
-      padding:14px;
-
-      border-radius:14px;
-
-      border:
-      2px solid #d1d5db;
-
-      font-size:1rem;
-    }
-
-    .form-group input:focus{
-
-      outline:none;
-
-      border-color:#2563eb;
-    }
-
-    .save-btn{
-
-      width:100%;
-
-      padding:16px;
-
-      border:none;
-
-      border-radius:16px;
-
-      background:
-      linear-gradient(135deg,
-      #2563eb,
-      #1d4ed8);
-
-      color:white;
-
-      font-size:1rem;
-
-      font-weight:700;
-
-      cursor:pointer;
-    }
-
-    .log{
-
-      margin-top:20px;
-
-      background:
-      rgba(255,255,255,.10);
-
-      border-radius:25px;
-
-      padding:20px;
-
-      backdrop-filter:blur(10px);
-    }
-
-    .log h3{
-
-      margin-bottom:15px;
-    }
-
-    .log-item{
-
-      background:
-      rgba(255,255,255,.08);
-
-      border-radius:15px;
-
-      padding:12px;
-
-      margin-bottom:10px;
-
-      line-height:1.5;
-    }
-
-    .log-item small{
-
-      display:block;
-
-      opacity:.7;
-
-      margin-bottom:4px;
-    }
-
+    *{margin:0;padding:0;box-sizing:border-box;}
+    #reader video{width:100% !important;height:320px !important;object-fit:cover !important;border-radius:20px;}
+    body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#0f172a,#1e3a8a,#2563eb);min-height:100vh;color:white;padding:15px;}
+    .container{width:100%;max-width:500px;margin:auto;}
+    .header{text-align:center;margin-bottom:20px;}
+    .logo{width:90px;height:90px;border-radius:25px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;margin:auto;font-size:2.5rem;box-shadow:0 15px 30px rgba(0,0,0,.35);}
+    .header h1{margin-top:15px;font-size:2.3rem;font-weight:700;}
+    .header p{opacity:.8;margin-top:5px;font-size:.95rem;}
+    .resumen-dia{background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:20px;padding:18px;margin-bottom:15px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.3);}
+    .resumen-dia h3{font-size:1rem;opacity:.9;margin-bottom:8px;}
+    .resumen-total{font-size:2.5rem;font-weight:700;}
+    .resumen-items{font-size:1.1rem;margin-top:5px;opacity:.9;}
+    .resumen-fecha{font-size:.85rem;opacity:.7;margin-top:8px;}
+    .btn-limpiar{background:rgba(255,255,255,.2);border:none;border-radius:10px;padding:8px 16px;color:white;font-weight:600;cursor:pointer;margin-top:10px;}
+    .btn-limpiar:hover{background:rgba(255,255,255,.3);}
+    .mode-selector{display:flex;flex-direction:column;gap:14px;margin-top:25px;}
+    .mode-btn{border:none;border-radius:18px;padding:18px;font-size:1rem;font-weight:700;color:white;cursor:pointer;transition:.3s;box-shadow:0 10px 25px rgba(0,0,0,.25);}
+    .mode-btn:active{transform:scale(.96);}
+    .venta-btn{background:linear-gradient(135deg,#ef4444,#dc2626);}
+    .recarga-btn{background:linear-gradient(135deg,#22c55e,#16a34a);}
+    .agregar-btn{background:linear-gradient(135deg,#f59e0b,#d97706);}
+    .consulta-btn{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+    .active{outline:4px solid rgba(255,255,255,.25);}
+    .scanner-card{margin-top:22px;background:rgba(255,255,255,.12);backdrop-filter:blur(15px);border-radius:28px;padding:18px;border:1px solid rgba(255,255,255,.12);box-shadow:0 15px 35px rgba(0,0,0,.25);}
+    .scanner-title{text-align:center;margin-bottom:15px;font-size:1.2rem;font-weight:700;}
+    #reader{width:100%;height:320px;object-fit:cover;border-radius:20px;background:#000;}
+    .status{margin-top:18px;text-align:center;font-size:1rem;font-weight:600;}
+    .result{margin-top:18px;background:rgba(255,255,255,.10);border-radius:22px;padding:20px;min-height:100px;text-align:center;font-size:1.05rem;backdrop-filter:blur(10px);line-height:1.6;}
+    .precio-box{font-size:3rem;font-weight:700;margin-top:10px;color:#22c55e;}
+    .form-producto{margin-top:20px;background:white;border-radius:25px;padding:22px;color:#111827;display:none;}
+    .form-producto h3{text-align:center;margin-bottom:18px;color:#1e3a8a;}
+    .codigo-box{background:#f3f4f6;padding:14px;border-radius:14px;text-align:center;font-weight:700;margin-bottom:18px;}
+    .form-group{margin-bottom:16px;}
+    .form-group label{display:block;margin-bottom:7px;font-weight:600;}
+    .form-group input{width:100%;padding:14px;border-radius:14px;border:2px solid #d1d5db;font-size:1rem;}
+    .form-group input:focus{outline:none;border-color:#2563eb;}
+    .save-btn{width:100%;padding:16px;border:none;border-radius:16px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;font-size:1rem;font-weight:700;cursor:pointer;}
+    .log{margin-top:20px;background:rgba(255,255,255,.10);border-radius:25px;padding:20px;backdrop-filter:blur(10px);}
+    .log h3{margin-bottom:15px;}
+    .log-item{background:rgba(255,255,255,.08);border-radius:15px;padding:12px;margin-bottom:10px;line-height:1.5;}
+    .log-item small{display:block;opacity:.7;margin-bottom:4px;}
+    .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center;z-index:1000;}
+    .modal.active{display:flex;}
+    .modal-content{background:white;color:#111827;border-radius:25px;padding:25px;width:90%;max-width:350px;text-align:center;}
+    .modal-content h3{margin-bottom:15px;color:#1e3a8a;}
+    .modal-content input{width:100%;padding:14px;border-radius:14px;border:2px solid #d1d5db;font-size:1.2rem;text-align:center;margin-bottom:15px;}
+    .modal-buttons{display:flex;gap:10px;}
+    .modal-btn{ flex:1; padding:12px;border:none;border-radius:12px;font-weight:700;font-size:1rem;cursor:pointer;}
+    .modal-btn.confirm{background:#2563eb;color:white;}
+    .modal-btn.cancelar{background:#ef4444;color:white;}
   </style>
-
 </head>
-
 <body>
-
 <div class="container">
-
   <div class="header">
-
+    <div class="logo">📦</div>
     <h1>ANLUSOFT</h1>
+    <p>Sistema móvil de inventario</p>
+  </div>
 
-    <p>
-      Sistema móvil de inventario
-    </p>
-
+  <div class="resumen-dia" id="resumenDia">
+    <h3>📊 Resumen del Día</h3>
+    <div class="resumen-total" id="totalVendido">S/ 0.00</div>
+    <div class="resumen-items" id="totalItems">0 ventas</div>
+    <div class="resumen-fecha" id="fechaDia"></div>
+    <button class="btn-limpiar" onclick="limpiarResumen()">🗑️ Limpiar</button>
   </div>
 
   <div class="mode-selector">
-
-    <button id="btnVenta"
-            class="mode-btn venta-btn active">
-
-      🔴 VENTA
-
-    </button>
-
-    <button id="btnRecarga"
-            class="mode-btn recarga-btn">
-
-      🟢 RECARGAR STOCK
-
-    </button>
-
-    <button id="btnAgregar"
-            class="mode-btn agregar-btn">
-
-      ➕ AGREGAR PRODUCTO
-
-    </button>
-
-    <button id="btnConsulta"
-            class="mode-btn consulta-btn">
-
-      💲 CONSULTA PRECIO
-
-    </button>
-
+    <button id="btnVenta" class="mode-btn venta-btn active">🔴 VENTA</button>
+    <button id="btnRecarga" class="mode-btn recarga-btn">🟢 RECARGAR STOCK</button>
+    <button id="btnAgregar" class="mode-btn agregar-btn">➕ AGREGAR PRODUCTO</button>
+    <button id="btnConsulta" class="mode-btn consulta-btn">💲 CONSULTA PRECIO</button>
   </div>
 
-<div class="scanner-card">
-
-    <div id="modoActual"
-         class="scanner-title">
-
-       Modo: 🔴 VENTAS
-
-    </div>
-
-    <div id="startCameraBtn" style="
-      width: 100%;
-      padding: 40px 20px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      font-size: 1.2rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      border: none;
-    ">
-      📷 Pulsa para activar cámara
-    </div>
-
-<div
-    id="reader"
-    autoplay
-    playsinline
-    muted
-    style="
-      width:100%;
-      min-height:300px;
-      border-radius:20px;
-      background:black;
-      display:none;
-    ">
-</div>
-
-    <div class="status">
-
-      <span id="status">
-
-        Apunta el código a la cámara...
-
-      </span>
-
-    </div>
-
+  <div class="scanner-card">
+    <div id="modoActual" class="scanner-title">Modo: 🔴 VENTAS</div>
+    <div id="startCameraBtn" style="width:100%;padding:40px 20px;border-radius:20px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;font-size:1.2rem;font-weight:700;cursor:pointer;text-align:center;border:none;">📷 Pulsa para activar cámara</div>
+    <div id="reader" autoplay playsinline muted style="width:100%;min-height:300px;border-radius:20px;background:black;display:none;"></div>
+    <div class="status"><span id="status">Apunta el código a la cámara...</span></div>
   </div>
 
-  <div class="result"
-       id="result">
+  <div class="result" id="result">Esperando escaneo...</div>
 
-    Esperando escaneo...
-
-  </div>
-
-  <!-- FORM -->
-
-  <div class="form-producto"
-       id="formProducto">
-
-    <h3>
-      ➕ Nuevo Producto
-    </h3>
-
-    <div class="codigo-box">
-
-      Código:
-      <span id="codigoEscaneado"></span>
-
-    </div>
-
-    <div class="form-group">
-
-      <label>Producto</label>
-
-      <input type="text"
-             id="nombreProducto"
-             placeholder="Ej: Coca Cola 3L">
-
-    </div>
-
-    <div class="form-group">
-
-      <label>Stock</label>
-
-      <input type="number"
-             id="stockProducto"
-             placeholder="Ej: 20">
-
-    </div>
-
-    <div class="form-group">
-
-      <label>Precio</label>
-
-      <input type="number"
-             id="precioProducto"
-             placeholder="Ej: 8.50">
-
-    </div>
-
-    <button class="save-btn"
-            onclick="guardarProducto()">
-
-      💾 Guardar Producto
-
-    </button>
-
+  <div class="form-producto" id="formProducto">
+    <h3>➕ Nuevo Producto</h3>
+    <div class="codigo-box">Código: <span id="codigoEscaneado"></span></div>
+    <div class="form-group"><label>Producto</label><input type="text" id="nombreProducto" placeholder="Ej: Coca Cola 3L"></div>
+    <div class="form-group"><label>Stock</label><input type="number" id="stockProducto" placeholder="Ej: 20"></div>
+    <div class="form-group"><label>Precio</label><input type="number" id="precioProducto" placeholder="Ej: 8.50"></div>
+    <button class="save-btn" onclick="guardarProducto()">💾 Guardar Producto</button>
   </div>
 
   <div class="log">
-
-    <h3>
-      📋 Historial
-    </h3>
-
+    <h3>📋 Historial</h3>
     <div id="log"></div>
-
   </div>
+</div>
 
+<div class="modal" id="modalCantidad">
+  <div class="modal-content">
+    <h3>🔢 Cantidad a vender</h3>
+    <input type="number" id="inputCantidad" value="1" min="1" placeholder="Cantidad">
+    <div id="modalInfoProducto" style="margin-bottom:15px;color:#666;"></div>
+    <div class="modal-buttons">
+      <button class="modal-btn cancelar" onclick="cerrarModalCantidad()">✕ Cancelar</button>
+      <button class="modal-btn confirm" onclick="confirmarVentaMultiple()">✓ Aceptar</button>
+    </div>
+  </div>
 </div>
 
 <script>
-
 let currentMode = "venta";
-
 let isScanning = false;
-
 let lastScanTime = 0;
-
 let codigoNuevoProducto = "";
-
+let precioTemporal = 0;
+let productoTemporal = "";
 const COOLDOWN_TIME = 1800;
+const URL_API = "https://script.google.com/macros/s/AKfycby2IgT3K_Wh8c2zlHL8ThrfLKJVilW7VHzV4tOZToD1h8oQoDyqPSNcH9jNQlTLk_TvFw/exec";
 
-const scanSound =
-document.getElementById("scanSound");
+const scanSound = document.getElementById("scanSound");
 const errorSound = document.getElementById("errorSound");
-const btnVenta =
-document.getElementById("btnVenta");
+const btnVenta = document.getElementById("btnVenta");
+const btnRecarga = document.getElementById("btnRecarga");
+const btnAgregar = document.getElementById("btnAgregar");
+const btnConsulta = document.getElementById("btnConsulta");
+const modoActual = document.getElementById("modoActual");
+const status = document.getElementById("status");
+const result = document.getElementById("result");
+const logDiv = document.getElementById("log");
+const formProducto = document.getElementById("formProducto");
+const codigoEscaneado = document.getElementById("codigoEscaneado");
+const modalCantidad = document.getElementById("modalCantidad");
+const inputCantidad = document.getElementById("inputCantidad");
+const modalInfoProducto = document.getElementById("modalInfoProducto");
 
-const btnRecarga =
-document.getElementById("btnRecarga");
-
-const btnAgregar =
-document.getElementById("btnAgregar");
-
-const btnConsulta =
-document.getElementById("btnConsulta");
-
-const modoActual =
-document.getElementById("modoActual");
-
-const status =
-document.getElementById("status");
-
-const result =
-document.getElementById("result");
-
-const logDiv =
-document.getElementById("log");
-
-const formProducto =
-document.getElementById("formProducto");
-
-const codigoEscaneado =
-document.getElementById("codigoEscaneado");
-
-const URL_API =
-"https://script.google.com/macros/s/AKfycby2IgT3K_Wh8c2zlHL8ThrfLKJVilW7VHzV4tOZToD1h8oQoDyqPSNcH9jNQlTLk_TvFw/exec";
-
-function playScanSound(){
-
-  scanSound.currentTime = 0;
-
-  scanSound.play().catch(err => {});
+function initLocalStorage(){
+  const hoy = new Date().toDateString();
+  const data = JSON.parse(localStorage.getItem("stockflow_resumen") || "{}");
+  if(data.fecha !== hoy){
+    localStorage.setItem("stockflow_resumen", JSON.stringify({fecha: hoy, total: 0, cantidad: 0, ventas: []}));
+  }
+  actualizarResumen();
 }
-function showErrorSound(){
-  errorSound.currentTime = 0;
-  errorSound.play().catch(()=>{});
+
+function guardarVentaLocal(precio, cantidad){
+  const hoy = new Date().toDateString();
+  const data = JSON.parse(localStorage.getItem("stockflow_resumen") || "{}");
+  if(data.fecha !== hoy){
+    data.fecha = hoy;
+    data.total = 0;
+    data.cantidad = 0;
+    data.ventas = [];
+  }
+  data.total += precio * cantidad;
+  data.cantidad += cantidad;
+  data.ventas.unshift({hora: new Date().toLocaleTimeString(), cantidad: cantidad, precio: precio});
+  if(data.ventas.length > 50) data.ventas = data.ventas.slice(0, 50);
+  localStorage.setItem("stockflow_resumen", JSON.stringify(data));
+  actualizarResumen();
 }
+
+function actualizarResumen(){
+  const data = JSON.parse(localStorage.getItem("stockflow_resumen") || "{}");
+  document.getElementById("totalVendido").textContent = "S/ " + (data.total || 0).toFixed(2);
+  document.getElementById("totalItems").textContent = (data.cantidad || 0) + " ventas";
+  const fecha = new Date();
+  document.getElementById("fechaDia").textContent = fecha.toLocaleDateString("es-ES", {weekday:"long", day:"numeric", month:"long"});
+}
+
+function limpiarResumen(){
+  if(confirm("¿Limpiar resumen del día? Esto no afecta Google Sheets.")){
+    const hoy = new Date().toDateString();
+    localStorage.setItem("stockflow_resumen", JSON.stringify({fecha: hoy, total: 0, cantidad: 0, ventas: []}));
+    actualizarResumen();
+  }
+}
+
+function playScanSound(){scanSound.currentTime = 0; scanSound.play().catch(err => {});}
+function showErrorSound(){errorSound.currentTime = 0; errorSound.play().catch(()=>{});}
+
 function resetButtons(){
-
   btnVenta.classList.remove("active");
   btnRecarga.classList.remove("active");
   btnAgregar.classList.remove("active");
   btnConsulta.classList.remove("active");
 }
 
-btnVenta.onclick = () => {
+btnVenta.onclick = () => {currentMode = "venta"; resetButtons(); btnVenta.classList.add("active"); modoActual.innerHTML = "Modo: 🔴 VENTAS"; formProducto.style.display = "none";};
+btnRecarga.onclick = () => {currentMode = "recarga"; resetButtons(); btnRecarga.classList.add("active"); modoActual.innerHTML = "Modo: 🟢 RECARGAR STOCK"; formProducto.style.display = "none";};
+btnAgregar.onclick = () => {currentMode = "agregar"; resetButtons(); btnAgregar.classList.add("active"); modoActual.innerHTML = "Modo: ➕ AGREGAR PRODUCTO";};
+btnConsulta.onclick = () => {currentMode = "consultaprecio"; resetButtons(); btnConsulta.classList.add("active"); modoActual.innerHTML = "Modo: 💲 CONSULTA PRECIO"; formProducto.style.display = "none";};
 
-  currentMode = "venta";
-
-  resetButtons();
-
-  btnVenta.classList.add("active");
-
-  modoActual.innerHTML =
-  "Modo: 🔴 VENTAS";
-
-  formProducto.style.display = "none";
-};
-
-btnRecarga.onclick = () => {
-
-  currentMode = "recarga";
-
-  resetButtons();
-
-  btnRecarga.classList.add("active");
-
-  modoActual.innerHTML =
-  "Modo: 🟢 RECARGAR STOCK";
-
-  formProducto.style.display = "none";
-};
-
-btnAgregar.onclick = () => {
-
-  currentMode = "agregar";
-
-  resetButtons();
-
-  btnAgregar.classList.add("active");
-
-  modoActual.innerHTML =
-  "Modo: ➕ AGREGAR PRODUCTO";
-};
-
-btnConsulta.onclick = () => {
-
-  currentMode = "consultaprecio";
-
-  resetButtons();
-
-  btnConsulta.classList.add("active");
-
-  modoActual.innerHTML =
-  "Modo: 💲 CONSULTA PRECIO";
-
-  formProducto.style.display = "none";
-};
 let html5QrCode;
 let cameraStarted = false;
 
 document.getElementById("startCameraBtn").onclick = async () => {
   if (cameraStarted) return;
-  
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ 
-      video: { facingMode: "environment" } 
-    });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
     stream.getTracks().forEach(track => track.stop());
-    
     document.getElementById("startCameraBtn").style.display = "none";
     document.getElementById("reader").style.display = "block";
     cameraStarted = true;
@@ -728,370 +228,161 @@ document.getElementById("startCameraBtn").onclick = async () => {
 };
 
 async function startScanner() {
-
   try {
-
     html5QrCode = new Html5Qrcode("reader");
-
     await html5QrCode.start(
-
-      {
-        facingMode: "environment"
-      },
-
-      {
-        fps: 10,
-
-        qrbox: function(viewfinderWidth, viewfinderHeight){
-
-          let minEdge =
-            Math.min(viewfinderWidth,
-                     viewfinderHeight);
-
-          let size =
-            Math.floor(minEdge * 0.9);
-
-          return {
-            width: size,
-            height: size
-          };
-        }
-      },
-
-      function(decodedText){
-
-        console.log("ESCANEADO:", decodedText);
-
-        handleScan(decodedText);
-      },
-
-      function(errorMessage){
-      }
-
+      { facingMode: "environment" },
+      { fps: 10, qrbox: function(viewfinderWidth, viewfinderHeight){ let minEdge = Math.min(viewfinderWidth, viewfinderHeight); let size = Math.floor(minEdge * 0.9); return { width: size, height: size }; } },
+      function(decodedText){ console.log("ESCANEADO:", decodedText); handleScan(decodedText); },
+      function(errorMessage){}
     );
-
-    status.innerHTML =
-      "📷 Cámara activa";
-
-  }
-  catch(err){
-
+    status.innerHTML = "📷 Cámara activa";
+  } catch(err) {
     console.error(err);
-
-    status.innerHTML =
-      "❌ Error: " + err;
+    status.innerHTML = "❌ Error: " + err;
   }
 }
+
 function handleScan(codigo){
-
   const now = Date.now();
-
-  if(
-    isScanning ||
-    (now - lastScanTime)
-    < COOLDOWN_TIME
-  ){
-    return;
-  }
-
+  if(isScanning || (now - lastScanTime) < COOLDOWN_TIME){ return; }
   isScanning = true;
-
   lastScanTime = now;
-
   playScanSound();
-
-  status.innerHTML =
-  `Código: ${codigo}`;
-
-  // CONSULTA PRECIO
+  status.innerHTML = `Código: ${codigo}`;
 
   if(currentMode === "consultaprecio"){
-
-    result.innerHTML =
-    "Consultando precio...";
-
+    result.innerHTML = "Consultando precio...";
     $.ajax({
-
-      url:URL_API,
-
-      method:"POST",
-
-      contentType:
-      "text/plain; charset=utf-8",
-
-      data:JSON.stringify({
-
-        op:"consultaprecio",
-
-        codigo:codigo
-      }),
-
-success:function(res){
-
-  if(!res.success){
-    result.innerHTML = `${res.message}`;
-    showErrorSound();
-    return;
-  }
-
-  const stock = res.stock ?? 0;
-
-  result.innerHTML = `
-
-    <h2>${res.producto}</h2>
-
-    <div class="precio-box">
-      S/ ${res.precio}
-    </div>
-
-    <div style="
-      margin-top:10px;co
-      font-size:1.3rem;
-      font-weight:700;
-      color:${stock == 0 ? 'red' : 'lime'};
-    ">
-      📦 Stock: ${stock}
-    </div>
-
-    ${stock == 0 ? `
-      <div style="color:red;font-weight:700;margin-top:10px;">
-        🚨 SIN STOCK
-      </div>
-    ` : ""}
-
-  `;
-
-  if(stock == 0){
-    showErrorSound();
-  }
-
-  addToLog(`CONSULTA - ${codigo}`);
-},
-
-      complete:function(){
-
-        setTimeout(() => {
-
-          isScanning = false;
-
-        },1000);
-      }
+      url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+      data: JSON.stringify({op: "consultaprecio", codigo: codigo}),
+      success: function(res){
+        if(!res.success){ result.innerHTML = `${res.message}`; showErrorSound(); return; }
+        const stock = res.stock ?? 0;
+        result.innerHTML = `
+          <h2>${res.producto}</h2>
+          <div class="precio-box">S/ ${res.precio}</div>
+          <div style="margin-top:10px;font-size:1.3rem;font-weight:700;color:${stock == 0 ? 'red' : 'lime'}">📦 Stock: ${stock}</div>
+          ${stock == 0 ? `<div style="color:red;font-weight:700;margin-top:10px;">🚨 SIN STOCK</div>` : ""}`;
+        if(stock == 0) showErrorSound();
+        addToLog(`CONSULTA - ${codigo}`);
+      },
+      complete: function(){ setTimeout(() => { isScanning = false; }, 1000); }
     });
-
     return;
   }
-
-  // AGREGAR PRODUCTO
 
   if(currentMode === "agregar"){
-
     codigoNuevoProducto = codigo;
-
-    codigoEscaneado.innerHTML =
-    codigo;
-
-    formProducto.style.display =
-    "block";
-
-    result.innerHTML = `
-      ✅ Código escaneado
-      <br>
-      Completa el formulario
-    `;
-
-    setTimeout(() => {
-
-      isScanning = false;
-
-    },1000);
-
+    codigoEscaneado.innerHTML = codigo;
+    formProducto.style.display = "block";
+    result.innerHTML = `✅ Código escaneado<br>Completa el formulario`;
+    setTimeout(() => { isScanning = false; }, 1000);
     return;
   }
 
-  // VENTA Y RECARGA
-
-  result.innerHTML =
-  "Procesando...";
-
-  $.ajax({
-
-    url:URL_API,
-
-    method:"POST",
-
-    contentType:
-    "text/plain; charset=utf-8",
-
-    data:JSON.stringify({
-
-      op:
-      currentMode === "venta"
-      ? "registraventa"
-      : "recarga",
-
-      codigo:codigo
-    }),
-
-success:function(res){
-
-  const stock = res.stock ?? 1;
-
-  const isError = !res.success || stock == 0;
-
-  result.innerHTML = `
-
-    <strong style="color:${isError ? 'red' : 'lime'}">
-
-      ${res.success ? 'Éxito' : 'Error'}
-
-    </strong>
-
-    <br><br>
-
-    ${res.message}
-
-    ${stock == 0 ? `<br><b style="color:red">🚨 SIN STOCK</b>` : ""}
-
-  `;
-
-  if(isError){
-    showErrorSound();
+  if(currentMode === "venta"){
+    result.innerHTML = "Consultando producto...";
+    $.ajax({
+      url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+      data: JSON.stringify({op: "consultaprecio", codigo: codigo}),
+      success: function(res){
+        if(!res.success){ result.innerHTML = `${res.message}`; showErrorSound(); isScanning = false; return; }
+        precioTemporal = parseFloat(res.precio) || 0;
+        productoTemporal = res.producto;
+        const stock = res.stock ?? 0;
+        if(stock === 0){
+          result.innerHTML = `❌ SIN STOCK<br><br>${res.producto}`;
+          showErrorSound();
+          isScanning = false;
+          return;
+        }
+        modalInfoProducto.innerHTML = `<strong>${res.producto}</strong><br>Precio: S/ ${res.precio}<br>Stock: ${stock}`;
+        inputCantidad.value = 1;
+        inputCantidad.max = stock;
+        modalCantidad.classList.add("active");
+        isScanning = false;
+      },
+      error: function(){ result.innerHTML = "❌ Producto no encontrado"; showErrorSound(); isScanning = false; }
+    });
+    return;
   }
 
-  addToLog(
-    `${currentMode} - ${codigo}`
-  );
-},
+  if(currentMode === "recarga"){
+    result.innerHTML = "Procesando...";
+    $.ajax({
+      url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+      data: JSON.stringify({op: "recarga", codigo: codigo}),
+      success: function(res){
+        const stock = res.stock ?? 1;
+        const isError = !res.success || stock == 0;
+        result.innerHTML = `<strong style="color:${isError ? 'red' : 'lime'}">${res.success ? 'Éxito' : 'Error'}</strong><br><br>${res.message}${stock == 0 ? `<br><b style="color:red">🚨 SIN STOCK</b>` : ""}`;
+        if(isError) showErrorSound();
+        addToLog(`RECARGA - ${codigo}`);
+      },
+      complete: function(){ setTimeout(() => { isScanning = false; }, 1000); }
+    });
+  }
+}
 
-    complete:function(){
+function cerrarModalCantidad(){
+  modalCantidad.classList.remove("active");
+  precioTemporal = 0;
+  productoTemporal = "";
+}
 
-      setTimeout(() => {
-
-        isScanning = false;
-
-      },1000);
-    }
+function confirmarVentaMultiple(){
+  const cantidad = parseInt(inputCantidad.value) || 1;
+  if(cantidad < 1){ alert("Cantidad inválida"); return; }
+  cerrarModalCantidad();
+  result.innerHTML = "Procesando venta...";
+  $.ajax({
+    url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+    data: JSON.stringify({op: "registraventa", codigo: codigoEscaneado?.innerText || "", cantidad: cantidad}),
+    success: function(res){
+      const stock = res.stock ?? 1;
+      const isError = !res.success || stock == 0;
+      result.innerHTML = `<strong style="color:${isError ? 'red' : 'lime'}">${res.success ? 'Éxito' : 'Error'}</strong><br><br>${res.message}${stock == 0 ? `<br><b style="color:red">🚨 SIN STOCK</b>` : ""}`;
+      if(isError){ showErrorSound(); }
+      else{
+        guardarVentaLocal(precioTemporal, cantidad);
+        playScanSound();
+      }
+      addToLog(`VENTA x${cantidad} - ${productoTemporal}`);
+    },
+    error: function(){ result.innerHTML = "❌ Error al registrar"; showErrorSound(); }
   });
 }
 
 function guardarProducto(){
-
-  const producto =
-  document.getElementById(
-    "nombreProducto"
-  ).value.trim();
-
-  const stock =
-  document.getElementById(
-    "stockProducto"
-  ).value.trim();
-
-  const precio =
-  document.getElementById(
-    "precioProducto"
-  ).value.trim();
-
-  if(!producto || !stock || !precio){
-
-    alert(
-      "Completa todos los campos"
-    );
-
-    return;
-  }
-
-  result.innerHTML =
-  "Guardando producto...";
-
+  const producto = document.getElementById("nombreProducto").value.trim();
+  const stock = document.getElementById("stockProducto").value.trim();
+  const precio = document.getElementById("precioProducto").value.trim();
+  if(!producto || !stock || !precio){ alert("Completa todos los campos"); return; }
+  result.innerHTML = "Guardando producto...";
   $.ajax({
-
-    url:URL_API,
-
-    method:"POST",
-
-    contentType:
-    "text/plain; charset=utf-8",
-
-    data:JSON.stringify({
-
-      op:"agregarproducto",
-
-      codigo:codigoNuevoProducto,
-
-      producto:producto,
-
-      stock:stock,
-
-      precio:precio
-    }),
-
-    success:function(res){
-
-      result.innerHTML = `
-
-        <strong>
-
-          ${res.success
-          ? '✅ Producto agregado'
-          : '❌ Error'}
-
-        </strong>
-
-        <br><br>
-
-        ${res.message}
-
-      `;
-
+    url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
+    data: JSON.stringify({op: "agregarproducto", codigo: codigoNuevoProducto, producto: producto, stock: stock, precio: precio}),
+    success: function(res){
+      result.innerHTML = `<strong>${res.success ? '✅ Producto agregado' : '❌ Error'}</strong><br><br>${res.message}`;
       if(res.success){
-
-        formProducto.style.display =
-        "none";
-
-        document.getElementById(
-        "nombreProducto"
-        ).value = "";
-
-        document.getElementById(
-        "stockProducto"
-        ).value = "";
-
-        document.getElementById(
-        "precioProducto"
-        ).value = "";
+        formProducto.style.display = "none";
+        document.getElementById("nombreProducto").value = "";
+        document.getElementById("stockProducto").value = "";
+        document.getElementById("precioProducto").value = "";
       }
-
-      addToLog(
-        `NUEVO PRODUCTO
-        - ${producto}`
-      );
+      addToLog(`NUEVO PRODUCTO - ${producto}`);
     }
   });
 }
 
 function addToLog(texto){
-
-  const hora =
-  new Date().toLocaleTimeString();
-
-  logDiv.innerHTML =
-
-  `<div class="log-item">
-
-    <small>${hora}</small>
-
-    ${texto}
-
-  </div>`
-
-  + logDiv.innerHTML;
+  const hora = new Date().toLocaleTimeString();
+  logDiv.innerHTML = `<div class="log-item"><small>${hora}</small>${texto}</div>` + logDiv.innerHTML;
+  if(logDiv.children.length > 20) logDiv.removeChild(logDiv.lastChild);
 }
 
-window.onload = () => {
-  console.log("StockFlow Mobile listo");
-};
-
+window.onload = () => { initLocalStorage(); console.log("StockFlow Mobile listo"); };
 </script>
-
 </body>
 </html>
