@@ -23,8 +23,17 @@ function doPost(e) {
     if (datos.fila) {
       return jsonResponse(false, "Producto ya existe");
     }
-    const nuevaFila = [codigo, e.parameter.producto, parseFloat(e.parameter.precio), parseInt(e.parameter.stock), fecha, hora, "ACTIVO"];
+    const nuevaFila = [
+      codigo,
+      e.parameter.producto,
+      parseFloat(e.parameter.precio),
+      parseInt(e.parameter.stock),
+      fecha,
+      hora,
+      "ACTIVO"
+    ];
     hoja.appendRow(nuevaFila);
+    registrarMovimiento(codigo, e.parameter.producto, parseInt(e.parameter.stock), "NUEVO PRODUCTO", fecha, hora);
     return jsonResponse(true, "Producto agregado correctamente");
   }
 
@@ -42,10 +51,10 @@ function doPost(e) {
   if (op === "registraventa") {
     const datos = buscarProducto(codigo);
     if (!datos.fila) return jsonResponse(false, "Producto no encontrado");
-    const stockActual = datos.data[3];
+    const stockActual = parseInt(datos.data[3]) || 0;
     const cantidadVenta = cantidad ? parseInt(cantidad) : 1;
     if (stockActual < cantidadVenta) {
-      return jsonResponse(false, "Stock insuficiente");
+      return jsonResponse(false, "Stock insuficiente. Stock actual: " + stockActual);
     }
     const nuevoStock = stockActual - cantidadVenta;
     hoja.getRange(datos.fila, 4).setValue(nuevoStock);
@@ -53,7 +62,7 @@ function doPost(e) {
     registrarMovimiento(codigo, datos.data[1], cantidadVenta, "VENTA", fecha, hora);
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
-      message: `Venta realizada (x${cantidadVenta})`,
+      message: `Vendido x${cantidadVenta}`,
       stock: nuevoStock
     })).setMimeType(ContentService.MimeType.JSON);
   }
@@ -61,14 +70,30 @@ function doPost(e) {
   if (op === "recarga") {
     const datos = buscarProducto(codigo);
     if (!datos.fila) return jsonResponse(false, "Producto no encontrado");
-    const stockActual = datos.data[3];
+    const stockActual = parseInt(datos.data[3]) || 0;
     const nuevoStock = stockActual + 1;
     hoja.getRange(datos.fila, 4).setValue(nuevoStock);
     hoja.getRange(datos.fila, 6).setValue(hora);
-    registrarMovimiento(codigo, datos.data[1], 1, "RECARGA", fecha, hora);
+    registrarMovimiento(codigo, datos.data[1], 1, "RECARGA +1", fecha, hora);
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
       message: "Stock recargado +1",
+      stock: nuevoStock
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (op === "recargavarios") {
+    const datos = buscarProducto(codigo);
+    if (!datos.fila) return jsonResponse(false, "Producto no encontrado");
+    const stockActual = parseInt(datos.data[3]) || 0;
+    const cant = cantidad ? parseInt(cantidad) : 1;
+    const nuevoStock = stockActual + cant;
+    hoja.getRange(datos.fila, 4).setValue(nuevoStock);
+    hoja.getRange(datos.fila, 6).setValue(hora);
+    registrarMovimiento(codigo, datos.data[1], cant, `RECARGA +${cant}`, fecha, hora);
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      message: `Recargado +${cant}. Nuevo stock: ${nuevoStock}`,
       stock: nuevoStock
     })).setMimeType(ContentService.MimeType.JSON);
   }
@@ -84,7 +109,7 @@ function buscarProducto(codigo) {
   const hoja = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   const datos = hoja.getDataRange().getValues();
   for (let i = 1; i < datos.length; i++) {
-    if (datos[i][0] == codigo) {
+    if (String(datos[i][0]) === String(codigo)) {
       return { fila: i + 1, data: datos[i] };
     }
   }
