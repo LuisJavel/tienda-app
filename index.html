@@ -134,6 +134,7 @@ let lastScanTime = 0;
 let codigoNuevoProducto = "";
 let precioTemporal = 0;
 let productoTemporal = "";
+let ultimoCodigoEscaneado = "";
 const COOLDOWN_TIME = 1800;
 const URL_API = "https://script.google.com/macros/s/AKfycby2IgT3K_Wh8c2zlHL8ThrfLKJVilW7VHzV4tOZToD1h8oQoDyqPSNcH9jNQlTLk_TvFw/exec";
 
@@ -282,6 +283,7 @@ function handleScan(codigo){
   }
 
   if(currentMode === "venta"){
+    ultimoCodigoEscaneado = codigo;
     result.innerHTML = "Consultando producto...";
     $.ajax({
       url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
@@ -334,11 +336,12 @@ function cerrarModalCantidad(){
 function confirmarVentaMultiple(){
   const cantidad = parseInt(inputCantidad.value) || 1;
   if(cantidad < 1){ alert("Cantidad inválida"); return; }
+  if(!ultimoCodigoEscaneado){ result.innerHTML = "❌ Escanea el código primero"; return; }
   cerrarModalCantidad();
   result.innerHTML = "Procesando venta...";
   $.ajax({
     url: URL_API, method: "POST", contentType: "text/plain; charset=utf-8",
-    data: JSON.stringify({op: "registraventa", codigo: codigoEscaneado?.innerText || "", cantidad: cantidad}),
+    data: JSON.stringify({op: "registraventa", codigo: ultimoCodigoEscaneado, cantidad: cantidad}),
     success: function(res){
       const stock = res.stock ?? 1;
       const isError = !res.success || stock == 0;
