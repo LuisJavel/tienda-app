@@ -463,13 +463,28 @@
 
   </div>
 
-  <div class="scanner-card">
+<div class="scanner-card">
 
     <div id="modoActual"
          class="scanner-title">
 
-      Modo: 🔴 VENTAS
+       Modo: 🔴 VENTAS
 
+    </div>
+
+    <div id="startCameraBtn" style="
+      width: 100%;
+      padding: 40px 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      border: none;
+    ">
+      📷 Pulsa para activar cámara
     </div>
 
 <div
@@ -482,6 +497,7 @@
       min-height:300px;
       border-radius:20px;
       background:black;
+      display:none;
     ">
 </div>
 
@@ -691,6 +707,17 @@ btnConsulta.onclick = () => {
   formProducto.style.display = "none";
 };
 let html5QrCode;
+let cameraStarted = false;
+
+document.getElementById("startCameraBtn").onclick = async () => {
+  if (cameraStarted) return;
+  
+  document.getElementById("startCameraBtn").style.display = "none";
+  document.getElementById("reader").style.display = "block";
+  cameraStarted = true;
+  await startScanner();
+};
+
 async function startScanner() {
 
   try {
@@ -1052,8 +1079,7 @@ function addToLog(texto){
 }
 
 window.onload = () => {
-
-  startScanner();
+  console.log("StockFlow Mobile listo");
 };
 
 </script>
