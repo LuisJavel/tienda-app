@@ -8,7 +8,7 @@
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <audio id="scanSound" preload="auto">
     <source src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3" type="audio/mp3">
   </audio>
@@ -16,78 +16,1032 @@
     <source src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3" type="audio/mp3">
   </audio>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#0f172a,#1e3a8a,#2563eb);min-height:100vh;color:white;padding:15px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
-    .container{width:100%;max-width:500px;margin:auto;}
-    .header{text-align:center;margin-bottom:15px;}
-    .logo{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;margin:auto;font-size:2rem;box-shadow:0 10px 25px rgba(0,0,0,.3);}
-    .header h1{margin-top:10px;font-size:2rem;font-weight:700;}
-    .header p{opacity:.7;font-size:.9rem;}
-    .resumen-card{background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:18px;padding:15px;margin-bottom:12px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.25);}
-    .resumen-card h3{font-size:.9rem;opacity:.9;margin-bottom:5px;}
-    .resumen-total{font-size:2rem;font-weight:700;}
-    .resumen-items{font-size:1rem;margin-top:3px;opacity:.9;}
-    .btn-limpiar{background:rgba(255,255,255,.2);border:none;border-radius:8px;padding:6px 14px;color:white;font-weight:600;cursor:pointer;margin-top:8px;}
-    .btn-limpiar:active{background:rgba(255,255,255,.35);}
-    .mode-selector{display:flex;flex-direction:column;gap:10px;margin-top:18px;}
-    .mode-btn{border:none;border-radius:16px;padding:15px;font-size:.95rem;font-weight:700;color:white;cursor:pointer;transition:.2s;box-shadow:0 6px 18px rgba(0,0,0,.2);}
-    .mode-btn:active{transform:scale(.97);}
-    .venta-btn{background:linear-gradient(135deg,#ef4444,#dc2626);}
-    .carrito-btn{background:linear-gradient(135deg,#06b6d4,#0891b2);}
-    .recarga-btn{background:linear-gradient(135deg,#22c55e,#16a34a);}
-    .agregar-btn{background:linear-gradient(135deg,#f59e0b,#d97706);}
-    .consulta-btn{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
-    .active{outline:3px solid rgba(255,255,255,.35);}
-    .scanner-card{margin-top:18px;background:rgba(255,255,255,.1);backdrop-filter:blur(12px);border-radius:24px;padding:15px;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 30px rgba(0,0,0,.2);}
-    .scanner-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-    .scanner-title{font-size:1.1rem;font-weight:700;}
-    .btn-stop-camera{background:#ef4444;color:white;border:none;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:.85rem;}
-    .btn-stop-camera:active{background:#dc2626;}
-    #startCameraBtn{width:100%;padding:35px 20px;border-radius:18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;font-size:1.1rem;font-weight:700;cursor:pointer;text-align:center;border:none;}
-    #reader{width:100%;height:250px;border-radius:18px;background:#000;display:none;}
-    #reader video{width:100%!important;height:250px!important;object-fit:cover!important;border-radius:18px;}
-    .status{margin-top:12px;text-align:center;font-size:.95rem;font-weight:600;}
-    .result{margin-top:15px;background:rgba(255,255,255,.1);border-radius:20px;padding:18px;text-align:center;font-size:1rem;backdrop-filter:blur(10px);min-height:80px;line-height:1.5;}
-    .precio-box{font-size:2.5rem;font-weight:700;margin-top:8px;color:#22c55e;}
-    .form-producto{margin-top:15px;background:white;border-radius:22px;padding:18px;color:#111827;display:none;}
-    .form-producto h3{text-align:center;margin-bottom:12px;color:#1e3a8a;}
-    .codigo-box{background:#f3f4f6;padding:12px;border-radius:12px;text-align:center;font-weight:700;margin-bottom:12px;}
-    .form-group{margin-bottom:12px;}
-    .form-group label{display:block;margin-bottom:5px;font-weight:600;font-size:.95rem;}
-    .form-group input{width:100%;padding:12px;border-radius:12px;border:2px solid #d1d5db;font-size:1rem;}
-    .form-group input:focus{outline:none;border-color:#2563eb;}
-    .save-btn{width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;font-size:1rem;font-weight:700;cursor:pointer;}
-    .log{margin-top:15px;background:rgba(255,255,255,.1);border-radius:22px;padding:15px;backdrop-filter:blur(10px);}
-    .log h3{margin-bottom:10px;font-size:1rem;}
-    .log-item{background:rgba(255,255,255,.07);border-radius:12px;padding:10px;margin-bottom:8px;font-size:.9rem;}
-    .log-item small{display:block;opacity:.65;margin-bottom:3px;}
-    .historial-section{margin-top:18px;background:rgba(255,255,255,.1);border-radius:22px;padding:18px;backdrop-filter:blur(10px);}
-    .historial-section h3{margin-bottom:12px;text-align:center;font-size:1.1rem;}
-    .historial-item{background:rgba(255,255,255,.07);border-radius:12px;padding:10px;margin-bottom:8px;}
-    .historial-item .fecha{font-size:.8rem;opacity:.65;}
-    .historial-item .producto{font-weight:600;margin-top:3px;}
-    .historial-item .detalle{display:flex;justify-content:space-between;margin-top:5px;font-size:.9rem;}
-    .historial-item .total-venta{color:#22c55e;font-weight:700;}
-    .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center;z-index:1000;}
-    .modal.active{display:flex;}
-    .modal-content{background:white;color:#111827;border-radius:22px;padding:22px;width:90%;max-width:340px;text-align:center;}
-    .modal-content h3{margin-bottom:12px;color:#1e3a8a;font-size:1.2rem;}
-    .modal-content input{width:100%;padding:14px;border-radius:12px;border:2px solid #d1d5db;font-size:1.3rem;text-align:center;margin-bottom:12px;}
-    .modal-info{margin-bottom:12px;color:#555;font-size:.95rem;}
-    .modal-buttons{display:flex;gap:10px;}
-    .modal-btn{flex:1;padding:12px;border:none;border-radius:12px;font-weight:700;font-size:1rem;cursor:pointer;}
-    .modal-btn.confirm{background:#2563eb;color:white;}
-    .modal-btn.cancelar{background:#ef4444;color:white;}
-    .carrito-resumen{text-align:left;margin-bottom:15px;max-height:200px;overflow-y:auto;}
-    .carrito-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f3f4f6;border-radius:10px;margin-bottom:6px;}
-    .carrito-item-name{font-weight:600;text-align:left;flex:1;font-size:.95rem;}
-    .carrito-item-cant{background:#2563eb;color:white;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
-    .carrito-item-precio{font-weight:700;color:#22c55e;font-size:.95rem;}
-    .carrito-item-remove{background:#ef4444;color:white;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:.75rem;}
-    .carrito-total{font-size:1.6rem;font-weight:700;color:#1e3a8a;margin:12px 0;padding:12px;background:#e0e7ff;border-radius:12px;}
-    .cobrar-btn{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-size:1.2rem;font-weight:700;cursor:pointer;}
-    .vaciar-btn{background:#ef4444;color:white;border:none;border-radius:10px;padding:8px 16px;cursor:pointer;margin-top:10px;font-size:.9rem;}
-    .carrito-vacio{text-align:center;padding:30px;color:#666;font-size:1.1rem;}
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-glass: rgba(255, 255, 255, 0.05);
+      --accent-red: #ff4757;
+      --accent-red-glow: rgba(255, 71, 87, 0.4);
+      --accent-cyan: #00d9ff;
+      --accent-cyan-glow: rgba(0, 217, 255, 0.3);
+      --accent-green: #2ed573;
+      --accent-green-glow: rgba(46, 213, 115, 0.3);
+      --accent-amber: #ffa502;
+      --accent-amber-glow: rgba(255, 165, 2, 0.3);
+      --accent-purple: #a855f7;
+      --accent-purple-glow: rgba(168, 85, 247, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --text-muted: rgba(255, 255, 255, 0.35);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(255, 255, 255, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      min-height: 100vh;
+      color: var(--text-primary);
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 400px;
+      background: radial-gradient(ellipse at 50% -100px, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      margin: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeSlideDown 0.6s ease-out;
+    }
+
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, #6366f1 50%, var(--accent-purple) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      font-size: 2rem;
+      box-shadow: 
+        0 8px 32px rgba(0, 217, 255, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-top: 12px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .resumen-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeSlideUp 0.5s ease-out 0.1s both;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .resumen-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(46, 213, 115, 0.5), transparent);
+    }
+
+    .resumen-card.green::before {
+      background: linear-gradient(90deg, transparent, rgba(46, 213, 115, 0.5), transparent);
+    }
+
+    .resumen-card.blue::before {
+      background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.5), transparent);
+    }
+
+    .resumen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .resumen-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    .resumen-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .resumen-icon.green {
+      background: rgba(46, 213, 115, 0.15);
+    }
+
+    .resumen-total {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--accent-green);
+      text-shadow: 0 0 30px var(--accent-green-glow);
+    }
+
+    .resumen-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .resumen-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .resumen-stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .resumen-stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-limpiar {
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid rgba(255, 71, 87, 0.2);
+      border-radius: 10px;
+      padding: 8px 14px;
+      color: var(--accent-red);
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-limpiar:active {
+      background: rgba(255, 71, 87, 0.2);
+      transform: scale(0.96);
+    }
+
+    .mode-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .mode-btn {
+      border: none;
+      border-radius: 16px;
+      padding: 16px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .mode-btn:active {
+      transform: scale(0.98);
+    }
+
+    .mode-btn .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mode-btn .label {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      text-align: left;
+    }
+
+    .mode-btn .badge {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+    }
+
+    .venta-btn {
+      background: linear-gradient(135deg, rgba(255, 71, 87, 0.15) 0%, rgba(255, 71, 87, 0.05) 100%);
+      border: 1px solid rgba(255, 71, 87, 0.2);
+    }
+
+    .venta-btn .icon { background: rgba(255, 71, 87, 0.2); }
+    .venta-btn:hover { border-color: rgba(255, 71, 87, 0.4); }
+    .venta-btn.active {
+      background: linear-gradient(135deg, var(--accent-red) 0%, #e63946 100%);
+      border-color: transparent;
+      box-shadow: 0 8px 24px var(--accent-red-glow);
+    }
+
+    .carrito-btn {
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.15) 0%, rgba(0, 217, 255, 0.05) 100%);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+    }
+
+    .carrito-btn .icon { background: rgba(0, 217, 255, 0.2); }
+    .carrito-btn:hover { border-color: rgba(0, 217, 255, 0.4); }
+    .carrito-btn.active {
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, #00b4d8 100%);
+      border-color: transparent;
+      box-shadow: 0 8px 24px var(--accent-cyan-glow);
+    }
+
+    .recarga-btn {
+      background: linear-gradient(135deg, rgba(46, 213, 115, 0.15) 0%, rgba(46, 213, 115, 0.05) 100%);
+      border: 1px solid rgba(46, 213, 115, 0.2);
+    }
+
+    .recarga-btn .icon { background: rgba(46, 213, 115, 0.2); }
+    .recarga-btn:hover { border-color: rgba(46, 213, 115, 0.4); }
+    .recarga-btn.active {
+      background: linear-gradient(135deg, var(--accent-green) 0%, #25a95d 100%);
+      border-color: transparent;
+      box-shadow: 0 8px 24px var(--accent-green-glow);
+    }
+
+    .agregar-btn {
+      background: linear-gradient(135deg, rgba(255, 165, 2, 0.15) 0%, rgba(255, 165, 2, 0.05) 100%);
+      border: 1px solid rgba(255, 165, 2, 0.2);
+    }
+
+    .agregar-btn .icon { background: rgba(255, 165, 2, 0.2); }
+    .agregar-btn:hover { border-color: rgba(255, 165, 2, 0.4); }
+    .agregar-btn.active {
+      background: linear-gradient(135deg, var(--accent-amber) 0%, #e69500 100%);
+      border-color: transparent;
+      box-shadow: 0 8px 24px var(--accent-amber-glow);
+    }
+
+    .consulta-btn {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(168, 85, 247, 0.05) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+    }
+
+    .consulta-btn .icon { background: rgba(168, 85, 247, 0.2); }
+    .consulta-btn:hover { border-color: rgba(168, 85, 247, 0.4); }
+    .consulta-btn.active {
+      background: linear-gradient(135deg, var(--accent-purple) 0%, #9333ea 100%);
+      border-color: transparent;
+      box-shadow: 0 8px 24px var(--accent-purple-glow);
+    }
+
+    .scanner-card {
+      margin-top: 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scanner-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    }
+
+    .scanner-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .scanner-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .scanner-title .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .btn-stop-camera {
+      background: rgba(255, 71, 87, 0.15);
+      border: 1px solid rgba(255, 71, 87, 0.3);
+      color: var(--accent-red);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-stop-camera:active {
+      background: rgba(255, 71, 87, 0.25);
+      transform: scale(0.96);
+    }
+
+    #startCameraBtn {
+      width: 100%;
+      padding: 48px 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%);
+      border: 2px dashed rgba(99, 102, 241, 0.3);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #startCameraBtn:hover {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(168, 85, 247, 0.2) 100%);
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    #startCameraBtn .icon-large {
+      font-size: 2.5rem;
+      opacity: 0.8;
+    }
+
+    #reader {
+      width: 100%;
+      height: 260px;
+      border-radius: 20px;
+      background: #000;
+      display: none;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #reader video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      border-radius: 20px;
+    }
+
+    #reader::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 3px solid rgba(0, 217, 255, 0.5);
+      border-radius: 20px;
+      pointer-events: none;
+      animation: scanLine 2s linear infinite;
+    }
+
+    @keyframes scanLine {
+      0% { border-color: rgba(0, 217, 255, 0.8); }
+      50% { border-color: rgba(168, 85, 247, 0.8); }
+      100% { border-color: rgba(0, 217, 255, 0.8); }
+    }
+
+    .status {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .result {
+      margin-top: 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.5;
+      transition: all 0.3s ease;
+    }
+
+    .result.success {
+      border-color: rgba(46, 213, 115, 0.3);
+      background: linear-gradient(135deg, rgba(46, 213, 115, 0.1) 0%, rgba(46, 213, 115, 0.03) 100%);
+    }
+
+    .result.error {
+      border-color: rgba(255, 71, 87, 0.3);
+      background: linear-gradient(135deg, rgba(255, 71, 87, 0.1) 0%, rgba(255, 71, 87, 0.03) 100%);
+    }
+
+    .result-product {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .precio-box {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      text-shadow: 0 0 30px var(--accent-green-glow);
+      margin-top: 8px;
+    }
+
+    .stock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .stock-badge.ok {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--accent-green);
+    }
+
+    .stock-badge.low {
+      background: rgba(255, 165, 2, 0.15);
+      color: var(--accent-amber);
+    }
+
+    .stock-badge.out {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--accent-red);
+    }
+
+    .form-producto {
+      margin-top: 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 24px;
+      display: none;
+    }
+
+    .form-producto h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .codigo-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 14px;
+      border-radius: 14px;
+      text-align: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .codigo-box span {
+      color: var(--accent-cyan);
+      font-size: 1.1rem;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 2px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+      color: white;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+      background: rgba(0, 217, 255, 0.05);
+    }
+
+    .form-group input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, #6366f1 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2);
+    }
+
+    .save-btn:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(0, 217, 255, 0.2);
+    }
+
+    .log {
+      margin-top: 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 20px;
+    }
+
+    .log h3 {
+      margin-bottom: 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .log-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .log-item small {
+      display: block;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-size: 0.75rem;
+    }
+
+    .log-item .action {
+      font-weight: 500;
+    }
+
+    .historial-section {
+      margin-top: 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 20px;
+    }
+
+    .historial-section h3 {
+      margin-bottom: 14px;
+      text-align: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .historial-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .historial-item:active {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .historial-item .fecha {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .historial-item .producto {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    .historial-item .detalle {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    .historial-item .total-venta {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .vaciar-btn {
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid rgba(255, 71, 87, 0.2);
+      color: var(--accent-red);
+      border-radius: 12px;
+      padding: 12px;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .vaciar-btn:active {
+      background: rgba(255, 71, 87, 0.2);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      border-radius: 28px;
+      padding: 28px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 18px;
+      border-radius: 16px;
+      border: 2px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 1.5rem;
+      text-align: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .modal-content input:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+    }
+
+    .modal-info {
+      margin: 16px 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .modal-info strong {
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.96);
+    }
+
+    .modal-btn.confirm {
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, #6366f1 100%);
+      color: white;
+      box-shadow: 0 4px 16px rgba(0, 217, 255, 0.25);
+    }
+
+    .modal-btn.cancelar {
+      background: rgba(255, 71, 87, 0.15);
+      border: 1px solid rgba(255, 71, 87, 0.2);
+      color: var(--accent-red);
+    }
+
+    .carrito-resumen {
+      text-align: left;
+      max-height: 180px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+
+    .carrito-resumen::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .carrito-resumen::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .carrito-resumen::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+    }
+
+    .carrito-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .carrito-item-name {
+      font-weight: 600;
+      text-align: left;
+      flex: 1;
+      font-size: 0.9rem;
+    }
+
+    .carrito-item-cant {
+      background: var(--accent-cyan);
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0 10px;
+    }
+
+    .carrito-item-precio {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: var(--accent-green);
+      font-size: 0.9rem;
+    }
+
+    .carrito-item-remove {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--accent-red);
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .carrito-item-remove:active {
+      background: rgba(255, 71, 87, 0.3);
+    }
+
+    .carrito-total {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin: 16px 0;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      border-radius: 16px;
+    }
+
+    .cobrar-btn {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-green) 0%, #25a95d 100%);
+      color: white;
+      font-size: 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 24px var(--accent-green-glow);
+      transition: all 0.25s ease;
+    }
+
+    .cobrar-btn:active {
+      transform: scale(0.98);
+    }
+
+    .carrito-vacio {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .empty-state {
+      padding: 30px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-state .icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 380px) {
+      body { padding: 10px; }
+      .resumen-total { font-size: 2rem; }
+      .mode-btn { padding: 14px 16px; }
+      .mode-btn .icon { width: 36px; height: 36px; }
+    }
   </style>
 </head>
 <body>
@@ -98,40 +1052,90 @@
     <p>Sistema móvil de inventario</p>
   </div>
 
-  <div class="resumen-card">
-    <h3>📊 Resumen del Día ($)</h3>
+  <div class="resumen-card green">
+    <div class="resumen-header">
+      <div class="resumen-label">
+        <div class="resumen-icon green">📊</div>
+        Resumen del Día
+      </div>
+      <button class="btn-limpiar" onclick="limpiarResumen()">🗑️ Limpiar</button>
+    </div>
     <div class="resumen-total" id="totalVendido">$ 0.00</div>
-    <div class="resumen-items" id="totalItems">0 ventas</div>
-    <div id="fechaDia" style="font-size:.85rem;opacity:.7;margin-top:5px;"></div>
-    <button class="btn-limpiar" onclick="limpiarResumen()">🗑️ Limpiar</button>
+    <div class="resumen-meta">
+      <div class="resumen-stat">
+        <span class="resumen-stat-value" id="totalItems">0</span>
+        <span class="resumen-stat-label">Ventas</span>
+      </div>
+      <div class="resumen-stat">
+        <span class="resumen-stat-value" id="fechaDia" style="font-size:0.9rem;opacity:0.7;"></span>
+        <span class="resumen-stat-label">Fecha</span>
+      </div>
+    </div>
   </div>
 
   <div class="mode-selector">
-    <button id="btnVenta" class="mode-btn venta-btn active">🔴 VENTA</button>
-    <button id="btnCarrito" class="mode-btn carrito-btn">🛒 CARRITO</button>
-    <button id="btnRecarga" class="mode-btn recarga-btn">🟢 RECARGAR</button>
-    <button id="btnAgregar" class="mode-btn agregar-btn">➕ AGREGAR</button>
-    <button id="btnConsulta" class="mode-btn consulta-btn">💲 CONSULTAR</button>
+    <button id="btnVenta" class="mode-btn venta-btn active">
+      <span class="icon">🔴</span>
+      <span class="label">VENTA</span>
+      <span class="badge">Directa</span>
+    </button>
+    <button id="btnCarrito" class="mode-btn carrito-btn">
+      <span class="icon">🛒</span>
+      <span class="label">CARRITO</span>
+      <span class="badge">Múltiple</span>
+    </button>
+    <button id="btnRecarga" class="mode-btn recarga-btn">
+      <span class="icon">🟢</span>
+      <span class="label">RECARGAR</span>
+      <span class="badge">Stock</span>
+    </button>
+    <button id="btnAgregar" class="mode-btn agregar-btn">
+      <span class="icon">➕</span>
+      <span class="label">AGREGAR</span>
+      <span class="badge">Nuevo</span>
+    </button>
+    <button id="btnConsulta" class="mode-btn consulta-btn">
+      <span class="icon">💲</span>
+      <span class="label">CONSULTAR</span>
+      <span class="badge">Precio</span>
+    </button>
   </div>
 
   <div class="scanner-card">
     <div class="scanner-header">
-      <div id="modoActual" class="scanner-title">Modo: 🔴 VENTA</div>
-      <button id="btnStopCamera" class="btn-stop-camera" onclick="stopCamera()" style="display:none;">✕ Cerrar Cámara</button>
+      <div class="scanner-title">
+        <span class="dot"></span>
+        <span id="modoActual">Modo: VENTA</span>
+      </div>
+      <button id="btnStopCamera" class="btn-stop-camera" onclick="stopCamera()" style="display:none;">✕ Cerrar</button>
     </div>
-    <div id="startCameraBtn" onclick="startCameraApp()">📷 Pulsa para activar cámara</div>
+    <div id="startCameraBtn" onclick="startCameraApp()">
+      <span class="icon-large">📷</span>
+      <span>Pulsa para activar cámara</span>
+    </div>
     <div id="reader"></div>
     <div class="status"><span id="status">Activa la cámara para escanear</span></div>
   </div>
 
-  <div class="result" id="result">Escanea un producto...</div>
+  <div class="result" id="result">
+    <span style="color: var(--text-muted);">Escanea un producto...</span>
+  </div>
 
   <div class="form-producto" id="formProducto">
-    <h3>➕ Nuevo Producto</h3>
+    <h3>✨ Nuevo Producto</h3>
     <div class="codigo-box">Código: <span id="codigoEscaneado"></span></div>
-    <div class="form-group"><label>Producto</label><input type="text" id="nombreProducto" placeholder="Nombre del producto"></div>
-    <div class="form-group"><label>Stock inicial</label><input type="number" id="stockProducto" placeholder="Cantidad"></div>
-    <div class="form-group"><label>Precio ($)</label><input type="number" id="precioProducto" placeholder="0.00" step="0.01"></div>
+    <div class="form-group">
+      <label>Producto</label>
+      <input type="text" id="nombreProducto" placeholder="Nombre del producto">
+    </div>
+    <div class="form-group">
+      <label>Stock inicial</label>
+      <input type="number" id="stockProducto" placeholder="Cantidad" min="1">
+    </div>
+    <div class="form-group">
+      <label>Precio ($)</label>
+      <input type="number" id="precioProducto" placeholder="0.00" step="0.01" min="0">
+    </div>
     <button class="save-btn" onclick="guardarProducto()">💾 Guardar Producto</button>
   </div>
 
@@ -166,7 +1170,7 @@
     <div class="carrito-total" id="totalCarrito">$ 0.00</div>
     <div class="modal-buttons">
       <button class="modal-btn cancelar" onclick="cerrarModalCobrar()">← Seguir</button>
-      <button class="modal-btn confirm" onclick="procesarCobro()" style="background:#22c55e;">💵 Cobrar</button>
+      <button class="modal-btn confirm" onclick="procesarCobro()" style="background: linear-gradient(135deg, var(--accent-green) 0%, #25a95d 100%);">💵 Cobrar</button>
     </div>
   </div>
 </div>
@@ -239,9 +1243,9 @@ function guardarVentaLocal(nombre, precio, cantidad){
 function actualizarResumen(){
   const data = JSON.parse(localStorage.getItem("stockflow_resumen") || "{}") || {};
   document.getElementById("totalVendido").textContent = "$ " + (data.total || 0).toFixed(2);
-  document.getElementById("totalItems").textContent = (data.cantidad || 0) + " ventas";
+  document.getElementById("totalItems").textContent = data.cantidad || 0;
   const fecha = new Date();
-  document.getElementById("fechaDia").textContent = fecha.toLocaleDateString("es-ES", {weekday:"long", day:"numeric", month:"long"});
+  document.getElementById("fechaDia").textContent = fecha.toLocaleDateString("es-ES", {weekday:"short", day:"numeric", month:"short"});
 }
 
 function limpiarResumen(){
@@ -250,7 +1254,8 @@ function limpiarResumen(){
     localStorage.setItem("stockflow_resumen", JSON.stringify({fecha: hoy, total: 0, cantidad: 0, ventas: []}));
     carrito = [];
     actualizarResumen();
-    result.innerHTML = "Resumen limpiado ✓";
+    result.innerHTML = '<span style="color:var(--accent-green);">✓ Resumen limpiado</span>';
+    result.className = 'result success';
   }
 }
 
@@ -258,7 +1263,7 @@ function mostrarHistorial(){
   const data = JSON.parse(localStorage.getItem("stockflow_resumen") || "{}") || {};
   const ventas = data.ventas || [];
   if(ventas.length === 0){
-    listaVentas.innerHTML = "<div class='carrito-vacio'>No hay ventas hoy</div>";
+    listaVentas.innerHTML = '<div class="empty-state"><div class="icon">📭</div>No hay ventas hoy</div>';
   } else {
     listaVentas.innerHTML = ventas.map(v => `
       <div class="historial-item">
@@ -300,9 +1305,11 @@ btnVenta.onclick = () => {
   currentMode = "venta";
   resetButtons();
   btnVenta.classList.add("active");
-  modoActual.innerHTML = "Modo: 🔴 VENTA";
+  modoActual.innerHTML = "Modo: VENTA";
   formProducto.style.display = "none";
   historialSection.style.display = "none";
+  result.className = 'result';
+  result.innerHTML = '<span style="color:var(--text-muted);">Escanea un producto...</span>';
 };
 
 btnCarrito.onclick = () => {
@@ -322,6 +1329,8 @@ btnRecarga.onclick = () => {
   modoActual.innerHTML = "🟢 RECARGAR";
   formProducto.style.display = "none";
   historialSection.style.display = "none";
+  result.className = 'result';
+  result.innerHTML = '<span style="color:var(--text-muted);">Escanea un producto para recargar...</span>';
 };
 
 btnAgregar.onclick = () => {
@@ -330,6 +1339,8 @@ btnAgregar.onclick = () => {
   btnAgregar.classList.add("active");
   modoActual.innerHTML = "➕ AGREGAR";
   historialSection.style.display = "none";
+  result.className = 'result';
+  result.innerHTML = '<span style="color:var(--text-muted);">Escanea el código del nuevo producto...</span>';
 };
 
 btnConsulta.onclick = () => {
@@ -339,6 +1350,8 @@ btnConsulta.onclick = () => {
   modoActual.innerHTML = "💲 CONSULTAR";
   formProducto.style.display = "none";
   historialSection.style.display = "none";
+  result.className = 'result';
+  result.innerHTML = '<span style="color:var(--text-muted);">Escanea para consultar precio...</span>';
 };
 
 async function startCameraApp(){
@@ -369,7 +1382,7 @@ async function iniciarEscaner(){
       { facingMode: "environment" },
       {
         fps: 12,
-        qrbox: { width: 300, height: 300 },
+        qrbox: { width: 280, height: 280 },
         aspectRatio: 1.0
       },
       function(decodedText){
@@ -399,7 +1412,7 @@ async function stopCamera(){
   cameraActiva = false;
   readerDiv.style.display = "none";
   btnStopCamera.style.display = "none";
-  startCameraBtn.style.display = "block";
+  startCameraBtn.style.display = "flex";
   status.innerHTML = "Cámara cerrada";
 }
 
@@ -412,11 +1425,12 @@ function handleScan(codigo){
   isScanning = true;
   lastScanTime = now;
   playScanSound();
-  status.innerHTML = `Código: ${codigo}`;
+  status.innerHTML = `✓ Código: ${codigo}`;
   ultimoCodigoEscaneado = codigo;
 
   if(currentMode === "consulta"){
     result.innerHTML = "Consultando...";
+    result.className = 'result';
     $.ajax({
       url: URL_API,
       method: "POST",
@@ -425,17 +1439,25 @@ function handleScan(codigo){
       success: function(res){
         if(!res.success){
           result.innerHTML = "❌ " + res.message;
+          result.className = 'result error';
           showErrorSound();
           return;
         }
         const stock = res.stock ?? 0;
+        let stockClass = 'ok';
+        let stockIcon = '✓';
+        if(stock == 0){
+          stockClass = 'out';
+          stockIcon = '🚨';
+        } else if(stock < 5){
+          stockClass = 'low';
+          stockIcon = '⚠️';
+        }
+        result.className = 'result success';
         result.innerHTML = `
-          <strong>${res.producto}</strong>
+          <div class="result-product">${res.producto}</div>
           <div class="precio-box">$ ${res.precio}</div>
-          <div style="margin-top:8px;font-size:1.1rem;color:${stock == 0 ? 'red' : '#22c55e'}">
-            📦 Stock: ${stock}
-          </div>
-          ${stock == 0 ? "<div style='color:red;font-weight:700;margin-top:8px;'>🚨 SIN STOCK</div>" : ""}
+          <span class="stock-badge ${stockClass}">${stockIcon} Stock: ${stock}</span>
         `;
         if(stock == 0) showErrorSound();
         addToLog("CONSULTA: " + codigo);
@@ -451,6 +1473,7 @@ function handleScan(codigo){
     codigoNuevoProducto = codigo;
     codigoEscaneado.innerHTML = codigo;
     formProducto.style.display = "block";
+    result.className = 'result success';
     result.innerHTML = "✅ Código escaneado<br>Completa el formulario";
     setTimeout(() => { isScanning = false; }, 1200);
     return;
@@ -458,6 +1481,7 @@ function handleScan(codigo){
 
   if(currentMode === "recarga"){
     result.innerHTML = "Consultando producto...";
+    result.className = 'result';
     $.ajax({
       url: URL_API,
       method: "POST",
@@ -466,6 +1490,7 @@ function handleScan(codigo){
       success: function(res){
         if(!res.success){
           result.innerHTML = "❌ " + res.message;
+          result.className = 'result error';
           showErrorSound();
           isScanning = false;
           return;
@@ -483,6 +1508,7 @@ function handleScan(codigo){
       },
       error: function(){
         result.innerHTML = "❌ Producto no encontrado";
+        result.className = 'result error';
         showErrorSound();
         isScanning = false;
       }
@@ -492,6 +1518,7 @@ function handleScan(codigo){
 
   if(currentMode === "venta" || currentMode === "carrito"){
     result.innerHTML = "Consultando...";
+    result.className = 'result';
     $.ajax({
       url: URL_API,
       method: "POST",
@@ -500,6 +1527,7 @@ function handleScan(codigo){
       success: function(res){
         if(!res.success){
           result.innerHTML = "❌ " + res.message;
+          result.className = 'result error';
           showErrorSound();
           isScanning = false;
           return;
@@ -509,6 +1537,7 @@ function handleScan(codigo){
         const stock = res.stock ?? 0;
         
         if(stock === 0){
+          result.className = 'result error';
           result.innerHTML = `❌ SIN STOCK<br><br>${res.producto}`;
           showErrorSound();
           isScanning = false;
@@ -526,6 +1555,7 @@ function handleScan(codigo){
       },
       error: function(){
         result.innerHTML = "❌ Producto no encontrado";
+        result.className = 'result error';
         showErrorSound();
         isScanning = false;
       }
@@ -559,6 +1589,7 @@ function confirmarAccion(){
 function procesarVenta(codigo, cantidad){
   if(!codigo){
     result.innerHTML = "❌ Escanea el código primero";
+    result.className = 'result error';
     return;
   }
   result.innerHTML = "Procesando...";
@@ -570,23 +1601,29 @@ function procesarVenta(codigo, cantidad){
     success: function(res){
       const isError = !res.success;
       const stock = res.stock ?? 0;
-      result.innerHTML = `
-        <strong style="color:${isError ? 'red' : '#22c55e'}">
-          ${res.success ? '✅ Vendido' : '❌ Error'}
-        </strong>
-        <br><br>${res.message}
-        ${stock == 0 ? "<br><b style='color:red'>🚨 SIN STOCK</b>" : ""}
-      `;
-      if(!isError){
-        guardarVentaLocal(productoTemporal, precioTemporal, cantidad);
-        playScanSound();
-      } else {
+      if(isError){
+        result.className = 'result error';
+        result.innerHTML = `
+          <strong style="color:var(--accent-red)">❌ Error</strong>
+          <br><br>${res.message}
+          ${stock == 0 ? "<br><b style='color:var(--accent-red)'>🚨 SIN STOCK</b>" : ""}
+        `;
         showErrorSound();
+      } else {
+        result.className = 'result success';
+        result.innerHTML = `
+          <strong style="color:var(--accent-green)">✅ Vendido</strong>
+          <br><br>${res.message}
+          ${stock == 0 ? "<br><b style='color:var(--accent-amber)'>⚠️ Último stock</b>" : ""}
+        `;
+        playScanSound();
+        guardarVentaLocal(productoTemporal, precioTemporal, cantidad);
       }
       addToLog(`VENTA x${cantidad} - ${productoTemporal}`);
     },
     error: function(){
       result.innerHTML = "❌ Error de conexión";
+      result.className = 'result error';
       showErrorSound();
     },
     complete: function(){
@@ -604,17 +1641,26 @@ function procesarRecarga(codigo, cantidad){
     data: JSON.stringify({op: "recargavarios", codigo: codigo, cantidad: cantidad}),
     success: function(res){
       const isError = !res.success;
-      result.innerHTML = `
-        <strong style="color:${isError ? 'red' : '#22c55e'}">
-          ${res.success ? '✅ Recargado' : '❌ Error'}
-        </strong>
-        <br><br>${res.message}
-      `;
-      if(isError) showErrorSound();
+      if(isError){
+        result.className = 'result error';
+        result.innerHTML = `
+          <strong style="color:var(--accent-red)">❌ Error</strong>
+          <br><br>${res.message}
+        `;
+        showErrorSound();
+      } else {
+        result.className = 'result success';
+        result.innerHTML = `
+          <strong style="color:var(--accent-green)">✅ Recargado</strong>
+          <br><br>${res.message}
+        `;
+        playScanSound();
+      }
       addToLog(`RECARGA +${cantidad} - ${productoTemporal}`);
     },
     error: function(){
       result.innerHTML = "❌ Error al recargar";
+      result.className = 'result error';
       showErrorSound();
     },
     complete: function(){
@@ -631,30 +1677,32 @@ function agregarAlCarrito(nombre, precio, cantidad){
     carrito.push({nombre, precio, cantidad});
   }
   mostrarCarrito();
+  result.className = 'result success';
   result.innerHTML = `✅ ${nombre} x${cantidad}<br>agregado al carrito`;
   addToLog(`AGREGADO x${cantidad} - ${nombre}`);
 }
 
 function mostrarCarrito(){
   if(carrito.length === 0){
-    result.innerHTML = "🛒 Carrito vacío<br>Escanea productos para agregar";
+    result.innerHTML = '<div class="empty-state"><div class="icon">🛒</div>Carrito vacío<br>Escanea productos para agregar</div>';
     return;
   }
   const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+  result.className = 'result';
   result.innerHTML = `
-    <h3 style="margin-bottom:12px;">🛒 Tu Carrito</h3>
+    <h3 style="margin-bottom:16px;font-family:'Space Grotesk',sans-serif;">🛒 Tu Carrito</h3>
     ${carrito.map((item, i) => `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#f3f4f6;border-radius:10px;margin-bottom:6px;color:#111;">
-        <span style="font-weight:600;font-size:.9rem;">${item.nombre}</span>
-        <span style="background:#2563eb;color:white;padding:3px 10px;border-radius:15px;font-size:.85rem;">x${item.cantidad}</span>
-        <span style="font-weight:700;color:#22c55e;font-size:.9rem;">$${(item.precio * item.cantidad).toFixed(2)}</span>
-        <button onclick="quitarDelCarrito(${i})" style="background:#ef4444;color:white;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:.7rem;">✕</button>
+      <div class="carrito-item" style="color:#111;">
+        <span class="carrito-item-name">${item.nombre}</span>
+        <span class="carrito-item-cant">${item.cantidad}</span>
+        <span class="carrito-item-precio">$${(item.precio * item.cantidad).toFixed(2)}</span>
+        <button class="carrito-item-remove" onclick="quitarDelCarrito(${i})">✕</button>
       </div>
     `).join("")}
-    <div style="font-size:1.5rem;font-weight:700;color:#1e3a8a;margin-top:12px;padding:12px;background:#e0e7ff;border-radius:12px;">
+    <div class="carrito-total" style="color:var(--accent-cyan);">
       Total: $${total.toFixed(2)}
     </div>
-    <button onclick="mostrarModalCobrar()" style="width:100%;padding:16px;margin-top:12px;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-size:1.2rem;font-weight:700;cursor:pointer;">
+    <button onclick="mostrarModalCobrar()" style="width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--accent-green),#25a95d);color:white;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px var(--accent-green-glow);">
       💵 Cobrar $${total.toFixed(2)}
     </button>
   `;
@@ -669,9 +1717,9 @@ function mostrarModalCobrar(){
   if(carrito.length === 0) return;
   const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
   document.getElementById("resumenCarrito").innerHTML = carrito.map(item => `
-    <div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #ddd;color:#111;font-size:.95rem;">
+    <div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border-subtle);color:#fff;font-size:0.9rem;">
       <span>${item.nombre} x${item.cantidad}</span>
-      <span style="font-weight:700;color:#22c55e;">$${(item.precio * item.cantidad).toFixed(2)}</span>
+      <span style="font-weight:700;color:var(--accent-green);">$${(item.precio * item.cantidad).toFixed(2)}</span>
     </div>
   `).join("");
   document.getElementById("totalCarrito").textContent = "$ " + total.toFixed(2);
@@ -687,12 +1735,9 @@ function procesarCobro(){
   
   const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
   
-  // Enviar cada producto al servidor
   let pendientes = carrito.length;
   
   carrito.forEach(item => {
-    // Buscar código del producto (necesario para enviar a Google Sheets)
-    // Por ahora usamos el último código escaneado para cada item
     $.ajax({
       url: URL_API,
       method: "POST",
@@ -703,15 +1748,16 @@ function procesarCobro(){
         pendientes--;
         if(pendientes === 0){
           cerrarModalCobrar();
-          result.innerHTML = `✅ VENTA COMPLETADA<br><br><span style="font-size:2rem;font-weight:700;color:#22c55e;">$${total.toFixed(2)}</span><br><br>¡Gracias!`;
+          result.className = 'result success';
+          result.innerHTML = `✅ VENTA COMPLETADA<br><br><span style="font-size:2.5rem;font-weight:700;color:var(--accent-green);font-family:'Space Grotesk',sans-serif;">$${total.toFixed(2)}</span><br><br>¡Gracias!`;
           playScanSound();
           carrito = [];
           setTimeout(() => {
             currentMode = "venta";
             resetButtons();
             btnVenta.classList.add("active");
-            modoActual.innerHTML = "Modo: 🔴 VENTA";
-            result.innerHTML = "Esperando escaneo...";
+            modoActual.innerHTML = "Modo: VENTA";
+            result.innerHTML = '<span style="color:var(--text-muted);">Esperando escaneo...</span>';
           }, 2500);
         }
       }
@@ -730,6 +1776,7 @@ function guardarProducto(){
   }
   
   result.innerHTML = "Guardando...";
+  result.className = 'result';
   $.ajax({
     url: URL_API,
     method: "POST",
@@ -742,24 +1789,29 @@ function guardarProducto(){
       precio: precio
     }),
     success: function(res){
-      result.innerHTML = `<strong style="color:${res.success ? '#22c55e' : 'red'}">${res.success ? '✅ Producto agregado' : '❌ Error'}</strong><br><br>${res.message}`;
       if(res.success){
+        result.className = 'result success';
+        result.innerHTML = `<strong style="color:var(--accent-green)">✅ Producto agregado</strong><br><br>${res.message}`;
         formProducto.style.display = "none";
         document.getElementById("nombreProducto").value = "";
         document.getElementById("stockProducto").value = "";
         document.getElementById("precioProducto").value = "";
+      } else {
+        result.className = 'result error';
+        result.innerHTML = `<strong style="color:var(--accent-red)">❌ Error</strong><br><br>${res.message}`;
       }
       addToLog("NUEVO: " + producto);
     },
     error: function(){
       result.innerHTML = "❌ Error al guardar";
+      result.className = 'result error';
     }
   });
 }
 
 function addToLog(texto){
   const hora = new Date().toLocaleTimeString();
-  logDiv.innerHTML = `<div class="log-item"><small>${hora}</small>${texto}</div>` + logDiv.innerHTML;
+  logDiv.innerHTML = `<div class="log-item"><small>${hora}</small><span class="action">${texto}</span></div>` + logDiv.innerHTML;
   if(logDiv.children.length > 12) logDiv.removeChild(logDiv.lastChild);
 }
 
