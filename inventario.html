@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - Tienda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #222222;
+            --accent-primary: #00d4aa;
+            --accent-secondary: #00a8ff;
+            --accent-warning: #ffb800;
+            --accent-danger: #ff4757;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --border-color: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+            background-image: 
+                radial-gradient(ellipse at 20% 0%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(0, 168, 255, 0.08) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .inventory-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .inventory-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 100px;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 12px 12px 0 0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            animation: fadeIn 0.4s ease-out 0.3s both;
+        }
+
+        .inventory-card {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 100px;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideInRight 0.5s ease-out both;
+            cursor: pointer;
+        }
+
+        .inventory-card:hover {
+            background: #2a2a2a;
+            border-color: var(--accent-primary);
+            transform: translateX(8px);
+            box-shadow: 
+                0 4px 20px rgba(0, 212, 170, 0.1),
+                inset 0 0 0 1px var(--accent-primary);
+        }
+
+        .inventory-card:nth-child(2) { animation-delay: 0.1s; }
+        .inventory-card:nth-child(3) { animation-delay: 0.15s; }
+        .inventory-card:nth-child(4) { animation-delay: 0.2s; }
+        .inventory-card:nth-child(5) { animation-delay: 0.25s; }
+        .inventory-card:nth-child(6) { animation-delay: 0.3s; }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-sku {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stock-badge {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+        }
+
+        .stock-badge.high {
+            background: rgba(0, 212, 170, 0.15);
+            color: var(--accent-primary);
+        }
+
+        .stock-badge.medium {
+            background: rgba(255, 184, 0, 0.15);
+            color: var(--accent-warning);
+        }
+
+        .stock-badge.low {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-danger);
+        }
+
+        .stock-trend {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .price-info {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .price-info span {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .action-cell {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .btn-edit {
+            background: rgba(0, 168, 255, 0.15);
+            color: var(--accent-secondary);
+        }
+
+        .btn-edit:hover {
+            background: var(--accent-secondary);
+            color: white;
+        }
+
+        .btn-delete {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-danger);
+        }
+
+        .btn-delete:hover {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .stats-bar {
+                justify-content: center;
+            }
+
+            .inventory-header {
+                display: none;
+            }
+
+            .inventory-card {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .stock-info, .price-info {
+                justify-content: space-between;
+            }
+
+            .action-cell {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <div class="logo">T</div>
+                <div class="brand">
+                    <h1>Panel de Inventario</h1>
+                    <span>Gestion de productos en tiempo real</span>
+                </div>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalProducts">6</div>
+                    <div class="stat-label">Productos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalStock">1,247</div>
+                    <div class="stat-label">En Stock</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalValue">$12,450</div>
+                    <div class="stat-label">Valor Total</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="inventory-grid">
+            <div class="inventory-header">
+                <div>Producto</div>
+                <div>Stock</div>
+                <div>Precio</div>
+                <div>Acciones</div>
+            </div>
+
+            <div class="inventory-card" data-id="1">
+                <div class="product-info">
+                    <div class="product-icon">📱</div>
+                    <div>
+                        <div class="product-name">iPhone 15 Pro Max</div>
+                        <div class="product-sku">SKU: IPH-15-PM-256</div>
+                    </div>
+                </div>
+                <div class="stock-info">
+                    <span class="stock-badge high">45</span>
+                    <span class="stock-trend">unidades</span>
+                </div>
+                <div class="price-info">$1,299 <span>USD</span></div>
+                <div class="action-cell">
+                    <button class="btn-action btn-edit">✏️</button>
+                    <button class="btn-action btn-delete">🗑️</button>
+                </div>
+            </div>
+
+            <div class="inventory-card" data-id="2">
+                <div class="product-info">
+                    <div class="product-icon">💻</div>
+                    <div>
+                        <div class="product-name">MacBook Air M3</div>
+                        <div class="product-sku">SKU: MBA-M3-512</div>
+                    </div>
+                </div>
+                <div class="stock-info">
+                    <span class="stock-badge high">28</span>
+                    <span class="stock-trend">unidades</span>
+                </div>
+                <div class="price-info">$1,449 <span>USD</span></div>
+                <div class="action-cell">
+                    <button class="btn-action btn-edit">✏️</button>
+                    <button class="btn-action btn-delete">🗑️</button>
+                </div>
+            </div>
+
+            <div class="inventory-card" data-id="3">
+                <div class="product-info">
+                    <div class="product-icon">🎧</div>
+                    <div>
+                        <div class="product-name">AirPods Pro 2</div>
+                        <div class="product-sku">SKU: APP-2-USB</div>
+                    </div>
+                </div>
+                <div class="stock-info">
+                    <span class="stock-badge medium">12</span>
+                    <span class="stock-trend">unidades</span>
+                </div>
+                <div class="price-info">$249 <span>USD</span></div>
+                <div class="action-cell">
+                    <button class="btn-action btn-edit">✏️</button>
+                    <button class="btn-action btn-delete">🗑️</button>
+                </div>
+            </div>
+
+            <div class="inventory-card" data-id="4">
+                <div class="product-info">
+                    <div class="product-icon">⌚</div>
+                    <div>
+                        <div class="product-name">Apple Watch Series 9</div>
+                        <div class="product-sku">SKU: AWS-9-45</div>
+                    </div>
+                </div>
+                <div class="stock-info">
+                    <span class="stock-badge low">3</span>
+                    <span class="stock-trend">unidades</span>
+                </div>
+                <div class="price-info">$429 <span>USD</span></div>
+                <div class="action-cell">
+                    <button class="btn-action btn-edit">✏️</button>
+                    <button class="btn-action btn-delete">🗑️</button>
+                </div>
+            </div>
+
+            <div class="inventory-card" data-id="5">
+                <div class="product-info">
+                    <div class="product-icon">📲</div>
+                    <div>
+                        <div class="product-name">iPad Air M2</div>
+                        <div class="product-sku">SKU: IPA-M2-256</div>
+                    </div>
+                </div>
+                <div class="stock-info">
+                    <span class="stock-badge high">67</span>
+                    <span class="stock-trend">unidades</span>
+                </div>
+                <div class="price-info">$599 <span>USD</span></div>
+                <div class="action-cell">
+                    <button class="btn-action btn-edit">✏️</button>
+                    <button class="btn-action btn-delete">🗑️</button>
+                </div>
+            </div>
+
+            <div class="inventory-card" data-id="6">
+                <div class="product-info">
+                    <div class="product-icon">🖥️</div>
+                    <div>
+                        <div class="product-name">Dell XPS 15</div>
+                        <div class="product-sku">SKU: DXP-15-OLED</div>
+                    </div>
+                </div>
+                <div class="stock-info">
+                    <span class="stock-badge medium">8</span>
+                    <span class="stock-trend">unidades</span>
+                </div>
+                <div class="price-info">$1,899 <span>USD</span></div>
+                <div class="action-cell">
+                    <button class="btn-action btn-edit">✏️</button>
+                    <button class="btn-action btn-delete">🗑️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
